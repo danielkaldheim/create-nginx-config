@@ -23,7 +23,7 @@ sed -i '' "s/localhost/${2}/" $CONF_NAME;
 ln -s $SITES_AVAILABLE/$CONF_NAME $SITES_ENABLED/$CONF_NAME
 
 # Stop nginx
-sudo launchctl unload /Library/LaunchDaemons/homebrew.mxcl.nginx.plist
+sudo launchctl unload /Library/LaunchDaemons/org.openresty.nginx.plist
 
 # Start nginx
-sudo launchctl load /Library/LaunchDaemons/homebrew.mxcl.nginx.plist
+sudo launchctl load /Library/LaunchDaemons/org.openresty.nginx.plist
