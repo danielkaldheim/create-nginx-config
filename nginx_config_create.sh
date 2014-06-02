@@ -22,8 +22,4 @@ sed -i '' "s/localhost/${2}/" $CONF_NAME;
 # Enable site
 ln -s $SITES_AVAILABLE/$CONF_NAME $SITES_ENABLED/$CONF_NAME
 
-# Stop nginx
-sudo launchctl unload /Library/LaunchDaemons/org.openresty.nginx.plist
-
-# Start nginx
-sudo launchctl load /Library/LaunchDaemons/org.openresty.nginx.plist
+sudo $SCRIPT_DIR/nginx reload
