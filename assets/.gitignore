@@ -1,0 +1,11 @@
+# Config and log-files
+.DS_Store
+.htaccess
+nginx.conf
+*.log
+
+# Uploads
+test/
+
+# Vendor
+vendor/

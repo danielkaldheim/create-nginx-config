@@ -10,8 +10,12 @@ cd $SITES_AVAILABLE
 
 CONF_NAME="${2}.conf"
 
-# Add composer.json
-cp "$SCRIPT_DIR/assets/nginx_vhost_wp.conf" $CONF_NAME
+# Add nginx config
+if [ "$3" = "wp" ]; then
+	cp "$SCRIPT_DIR/assets/nginx_vhost_wp.conf" $CONF_NAME
+else
+	cp "$SCRIPT_DIR/assets/nginx_vhost.conf" $CONF_NAME
+fi
 
 # Fix root
 # sed -i '' "s/root \/var\/www/root ${1}/" $CONF_NAME;
