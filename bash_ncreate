@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+ncreate() {
+
+	# Create folders
+	if [ "$2" = "wp" ]; then
+		/Users/daniel/Dropbox/WebApps/wp-create-composer/wpcreate.sh "/var/www" "$1.dev" "$1";
+	else
+		/Users/daniel/Dropbox/WebApps/create_nginx_osx/newSite.sh "/var/www" "$1.dev" "$1";
+	fi
+
+	# Add nginx config
+	/Users/daniel/Dropbox/WebApps/create_nginx_osx/nginx_config_create.sh "/var/www" "$1.dev" $2;
+
+	# Add to hosts
+	echo "127.0.0.1 $1.dev" | sudo tee -a /etc/hosts;
+
+	# Add database
+	mysql -uroot --password=root -e "create database $1"
+
+	# Open sublime text
+	subl "/var/www/$1.dev/"
+
+}
