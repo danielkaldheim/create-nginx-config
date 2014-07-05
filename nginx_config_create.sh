@@ -19,15 +19,24 @@ CONF_NAME="${DOMAIN}.conf"
 
 if [ -f $CONF_NAME ]; then
 
-    echo -e "\033[0;31mConfig \033[1;31m$CONF_NAME\033[0;31m exists, do you want to overwrite? (y/n) \033[0m"
-    read yn
-
-    if [ "$yn" = "y" ]; then
-        rm -v $CONF_NAME
-    else
-        exit 0
-    fi
-
+    while true
+    do
+        echo -e "\033[0;31mConfig \033[1;31m$CONF_NAME\033[0;31m exists, do you want to overwrite? (y/n) \033[0m"
+        read yn
+        case $yn
+        in
+            [yY])
+                echo -e "\033[0;36mRemoving old \033[1;36m$CONF_NAME\033[0m"
+                rm $CONF_NAME
+                break
+                ;;
+            [nN])
+                exit 2
+                ;;
+            *)
+                echo "Please enter Y or N"
+        esac
+    done
 fi
 
 
