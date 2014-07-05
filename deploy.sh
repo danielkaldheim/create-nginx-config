@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ~/.bash_ncreate_config
+
 USUDO=""
 DEPLOY_DIR=$GLOBAL_WWW_PATH;
 PUBLIC_HTML="public_html"
@@ -62,10 +64,12 @@ if [ $3 ]; then
 	git config core.sharedrepository 1
 	git config receive.denyNonFastforwards true
 
+	chown -R $USER:adm .
+
 	# Go into hooks
 	cd hooks
 
-	if [[ $POST_RECEIVE_SCRIPT_PATH != "" ]]; then
+	if [ $POST_RECEIVE_SCRIPT_PATH != "" ]; then
 		echo -e "\033[0;36mLinking post receive script\033[0m"
 		HOOKS_PATH=$(pwd)
 		ln -s $POST_RECEIVE_SCRIPT_PATH "${HOOKS_PATH}/post-receive"
@@ -77,8 +81,6 @@ if [ $3 ]; then
 
 	# Go out of hooks
 	cd ..
-
-	chown -R $USER:adm .
 
 	echo -e "\033[0;36mAdd this to your local git repo \033[1;36mgit remote add deploy git+ssh://${USER}@${HOSTNAME}${SITE_DIR}/${PROJECT_NAME}\033[0m"
 
