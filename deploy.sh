@@ -78,7 +78,7 @@ if [ $3 ]; then
 	# Go out of hooks
 	cd ..
 
-	chown -r $USER:adm .
+	chown -R $USER:adm .
 
 	echo -e "\033[0;36mAdd this to your local git repo \033[1;36mgit remote add deploy git+ssh://${USER}@${HOSTNAME}${SITE_DIR}/${PROJECT_NAME}\033[0m"
 
