@@ -105,7 +105,7 @@ fi
 
 # Add nginx config
 echo -e "\033[0;36mAdding new nginx config:\033[0m"
-$NCREATE_SCRIPT_PATH/nginx_config_create.sh "$SITE_DIR" $DOMAIN;
+$NCREATE_SCRIPT_PATH/nginx_config_create.sh "$SITE_DIR" $DOMAIN '' '' $USER 'adm';
 
 # Add to hosts
 echo -e "\033[0;36mAdding site to hosts:\033[0m"

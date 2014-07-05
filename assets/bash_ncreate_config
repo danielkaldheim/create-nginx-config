@@ -10,6 +10,10 @@ export NCREATE_SCRIPT_PATH="PATH/TO/create_nginx_osx"
 export WPCREATE_SCRIPT_PATH="PATH/TO/wp-create-composer"
 
 export NGINX_VHOST_PATH="/etc/nginx/sites-enabled"
+export PHP_FPM_POOL_PATH="/etc/php-fpm.d"
+
+export NGINX_DEFAULT_USER="nginx"
+export NGINX_DEFAULT_GROUP="nginx"
 
 # Where to soft link post receive script
 export POST_RECEIVE_SCRIPT_PATH=""

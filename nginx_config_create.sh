@@ -5,9 +5,10 @@ SCRIPT_DIR=$(cd "$(dirname ${BASH_SOURCE[0]})"; pwd)
 
 WORDPRESS="FALSE"
 
-cd $NGINX_VHOST_PATH
-
 DOMAIN=$2
+
+echo $4
+
 # check the domain is valid!
 PATTERN="^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$";
 if [[ "$DOMAIN" =~ $PATTERN ]]; then
@@ -18,32 +19,10 @@ else
 fi
 
 CONF_NAME="${DOMAIN}.conf"
+WEBDIR="$1/${DOMAIN}"
 
-if [ -f $CONF_NAME ]; then
-
-    while true
-    do
-        echo -e "\033[0;31mConfig \033[1;31m$CONF_NAME\033[0;31m exists, do you want to overwrite? (y/n) \033[0m"
-        read yn
-        case $yn
-        in
-            [yY])
-                echo -e "\033[0;36mRemoving old \033[1;36m$CONF_NAME\033[0m"
-                rm $CONF_NAME
-                break
-                ;;
-            [nN])
-                exit 2
-                ;;
-            *)
-                echo "Please enter Y or N"
-        esac
-    done
-fi
-
-
-# Add nginx config
-cp -v "$SCRIPT_DIR/assets/nginx_vhost.conf" $CONF_NAME
+UPSTREAMNAME=`echo $DOMAIN | tr '[\.]' '[\-]'`
+UPSTREAMNAME="$UPSTREAMNAME-socket"
 
 if [[ -z $3 ]]; then
     while true
@@ -69,18 +48,97 @@ else
     fi
 fi
 
+# Add php-fpm config
+echo $PHP_FPM_POOL_PATH
+cd $PHP_FPM_POOL_PATH
+
+if [ -f $CONF_NAME ]; then
+
+    while true
+    do
+        echo -e "\033[0;31mPHP-FPM config \033[1;31m$CONF_NAME\033[0;31m exists, do you want to overwrite? (y/n) \033[0m"
+        read yn
+        case $yn
+        in
+            [yY])
+                echo -e "\033[0;36mRemoving old \033[1;36m$CONF_NAME\033[0m"
+                rm $CONF_NAME
+                break
+                ;;
+            [nN])
+                exit 2
+                ;;
+            *)
+                echo "Please enter Y or N"
+        esac
+    done
+fi
+
+cp -v "$SCRIPT_DIR/assets/php-fpm.conf" $CONF_NAME
+sed -i.bk "s/DOMAIN/${DOMAIN}/g" $CONF_NAME;
+sed -i.bk "s|PATH_TO_WEBDIR|$WEBDIR|g" $CONF_NAME;
+sed -i.bk "s|{USER}|$5|g" $CONF_NAME;
+sed -i.bk "s|{GROUP}|$6|g" $CONF_NAME;
+sed -i.bk "s|{LISTEN_USER}|$NGINX_DEFAULT_USER|g" $CONF_NAME;
+sed -i.bk "s|{LISTEN_GROUP}|$NGINX_DEFAULT_GROUP|g" $CONF_NAME;
+
+if [[ "$4" = "dev" ]]; then
+    sed -i.bk "s|{DISPLAY_ERRORS}|On|g" $CONF_NAME;
+else
+    sed -i.bk "s|{DISPLAY_ERRORS}|Off|g" $CONF_NAME;
+fi
+
+rm "$CONF_NAME.bk"
+
+if [ -f /etc/init.d/php-fpm ]; then
+    sudo /etc/init.d/php-fpm reload
+else
+    sudo $SCRIPT_DIR/php-fpm reload
+fi
+
+# Add nginx config
+echo $NGINX_VHOST_PATH
+cd $NGINX_VHOST_PATH
+
+if [ -f $CONF_NAME ]; then
+
+    while true
+    do
+        echo -e "\033[0;31mNGINX config \033[1;31m$CONF_NAME\033[0;31m exists, do you want to overwrite? (y/n) \033[0m"
+        read yn
+        case $yn
+        in
+            [yY])
+                echo -e "\033[0;36mRemoving old \033[1;36m$CONF_NAME\033[0m"
+                rm $CONF_NAME
+                break
+                ;;
+            [nN])
+                exit 2
+                ;;
+            *)
+                echo "Please enter Y or N"
+        esac
+    done
+fi
+
+cp -v "$SCRIPT_DIR/assets/nginx_vhost.conf" $CONF_NAME
+
 if [[ $WORDPRESS = "TRUE" ]]; then
-    sed -i.bk 17' a\
+    sed -i.bk 22' a\
 \    include wordpress.conf;\
     ' $CONF_NAME;
     if [[ "$4" = "dev" ]]; then
-        sed -i.bk "s|www.localhost ||g" $CONF_NAME;
         sed -i.bk "s|/public_html||g" $CONF_NAME;
     fi
 fi
 
-WEBDIR="$1/${DOMAIN}"
-sed -i.bk "s/localhost/${DOMAIN}/g" $CONF_NAME;
+if [[ "$4" = "dev" ]]; then
+    sed -i.bk "s|www.DOMAIN ||g" $CONF_NAME;
+fi
+
+sed -i.bk "s/DOMAIN/${DOMAIN}/g" $CONF_NAME;
+sed -i.bk "s/UPSTREAMNAME/${UPSTREAMNAME}/g" $CONF_NAME;
 sed -i.bk "s|PATH_TO_WEBDIR|$WEBDIR|g" $CONF_NAME;
 
 rm "$CONF_NAME.bk"

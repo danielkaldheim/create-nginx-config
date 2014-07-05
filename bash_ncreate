@@ -20,7 +20,7 @@ ncreate() {
 
 		# Add nginx config
 		echo -e "\033[0;36mAdding new nginx config:\033[0m"
-		nConfigCreate "$GLOBAL_WWW_PATH" "$1.dev" $2 dev;
+		nConfigCreate "$GLOBAL_WWW_PATH" "$1.dev" "$2" 'dev' "_www" "_www";
 
 		# Add to hosts
 		echo -e "\033[0;36mAdding site to hosts:\033[0m"

@@ -1,31 +1,30 @@
 #!/bin/sh
 #
 # chkconfig: 2345 55 25
-# Description: Nginx init.d script, put in /etc/init.d, chmod +x /etc/init.d/nginx
-#              For Debian, run: update-rc.d -f nginx defaults
-#              For CentOS, run: chkconfig --add nginx
+# Description: php-fpm init.d script, put in /etc/init.d, chmod +x /etc/init.d/php-fpm
+#              For Debian, run: update-rc.d -f php-fpm defaults
+#              For CentOS, run: chkconfig --add php-fpm
 #
 ### BEGIN INIT INFO
-# Provides:          nginx
+# Provides:          php-fpm
 # Required-Start:    $all
 # Required-Stop:     $all
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: nginx init.d script
-# Description:       OpenResty (aka. ngx_openresty) is a full-fledged web application server by bundling the standard Nginx core, lots of 3rd-party Nginx modules, as well as most of their external dependencies.
+# Short-Description: php-fpm init.d script
+# Description:       PHP FastCGI Process Manager
 ### END INIT INFO
 #
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-DESC="Nginx Daemon"
-NAME=nginx
-PREFIX=/usr/local/openresty/nginx
+DESC="PHP-FPM Daemon"
+NAME=php-fpm
+PREFIX=/usr/local/Cellar/php55/5.5.10
 DAEMON=$PREFIX/sbin/$NAME
-CONF=/usr/local/etc/nginx/$NAME.conf
+CONF=/usr/local/etc/php/5.5/$NAME.conf
 PID=/var/run/$NAME.pid
 SCRIPT_DIR=$(cd "$(dirname ${BASH_SOURCE[0]})"; pwd)
 SCRIPT=$SCRIPT_DIR/$NAME
-
 if [ ! -x "$DAEMON" ] || [ ! -f "$CONF" ]; then
     echo -e "\033[33m $DAEMON has no permission to run. \033[0m"
     echo -e "\033[33m Or $CONF doesn't exist. \033[0m"
@@ -37,13 +36,9 @@ do_start() {
     if [ -f $PID ]; then
         echo -e "\033[33m $PID already exists. \033[0m"
         echo -e "\033[33m $DESC is already running or crashed. \033[0m"
-        echo -e "\033[32m $DESC Reopening $CONF ... \033[0m"
-        $DAEMON -s reopen -c $CONF
-        sleep 1
-        echo -e "\033[36m $DESC reopened. \033[0m"
     else
         echo -e "\033[32m $DESC Starting $CONF ... \033[0m"
-        $DAEMON -c $CONF
+        $DAEMON -g $PID -D -y $CONF
         sleep 1
         echo -e "\033[36m $DESC started. \033[0m"
     fi
@@ -55,47 +50,49 @@ do_stop() {
         echo -e "\033[33m $DESC isn't running. \033[0m"
     else
         echo -e "\033[32m $DESC Stopping $CONF ... \033[0m"
-        $DAEMON -s stop -c $CONF
+        kill `cat $PID`
         sleep 1
         echo -e "\033[36m $DESC stopped. \033[0m"
     fi
 }
 
-do_reload() {
+do_status() {
     if [ ! -f $PID ]; then
-        echo -e "\033[33m $PID doesn't exist. \033[0m"
         echo -e "\033[33m $DESC isn't running. \033[0m"
-        echo -e "\033[32m $DESC Starting $CONF ... \033[0m"
-        $DAEMON -c $CONF
-        sleep 1
-        echo -e "\033[36m $DESC started. \033[0m"
     else
-        echo -e "\033[32m $DESC Reloading $CONF ... \033[0m"
-        $DAEMON -s reload -c $CONF
-        sleep 1
-        echo -e "\033[36m $DESC reloaded. \033[0m"
+        ps cax | grep $NAME > /dev/null
+        if [ $? -eq 0 ]; then
+            echo -e "\033[36m $DESC is running. \033[0m"
+        else
+            echo -e "\033[33m $DESC isn't running. \033[0m"
+        fi
     fi
 }
 
-do_quit() {
+do_reload() {
     if [ ! -f $PID ]; then
-        echo -e "\033[33m $PID doesn't exist. \033[0m"
-        echo -e "\033[33m $DESC isn't running. \033[0m"
+        do_start
     else
-        echo -e "\033[32m $DESC Quitting $CONF ... \033[0m"
-        $DAEMON -s quit -c $CONF
-        sleep 1
-        echo -e "\033[36m $DESC quitted. \033[0m"
+        echo -e "\033[32m $DESC Reloading $CONF ... \033[0m"
+        if ! $DAEMON -t -y $CONF ; then
+            echo -e "\033[33m $DESC could not reload due to configuration syntax error\033[0m"
+        else
+            kill `cat $PID`
+            sleep 1
+            $DAEMON -g $PID -D -y $CONF
+            sleep 1
+            echo -e "\033[36m $DESC reloaded. \033[0m"
+        fi
     fi
 }
 
 do_test() {
     echo -e "\033[32m $DESC Testing $CONF ... \033[0m"
-    $DAEMON -t -c $CONF
+    $DAEMON -t -y $CONF
 }
 
 do_info() {
-    $DAEMON -V
+    $DAEMON -i
 }
 
 case "$1" in
@@ -105,15 +102,15 @@ case "$1" in
  stop)
  do_stop
  ;;
+ status)
+ do_status
+ ;;
  reload)
  do_reload
  ;;
  restart)
  do_stop
  do_start
- ;;
- quit)
- do_quit
  ;;
  test)
  do_test
@@ -122,7 +119,7 @@ case "$1" in
  do_info
  ;;
  *)
- echo "Usage: $SCRIPT {start|stop|reload|restart|quit|test|info}"
+ echo "Usage: $SCRIPT {start|stop|status|reload|restart|test|info}"
  exit 2
  ;;
 esac
