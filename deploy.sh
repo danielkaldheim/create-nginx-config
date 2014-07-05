@@ -55,12 +55,10 @@ fi
 echo -e "\033[0;36mCreating sites directories\033[0m";
 mkdir -v -m 775 $2
 chown -v $USER:adm $2
-echo -e "\033[0;35m$2\033[0m";
 
 cd $2
 mkdir -v -m 775 $PUBLIC_HTML
 chown -v $USER:adm $PUBLIC_HTML
-echo -e "\033[0;35m$2/$PUBLIC_HTML\033[0m";
 
 SITE_DIR=$(pwd)
 
@@ -83,7 +81,7 @@ if [ $3 ]; then
 	git config core.sharedrepository 1
 	git config receive.denyNonFastforwards true
 
-	chown -v -R $USER:adm .
+	chown -R $USER:adm .
 
 	# Go into hooks
 	cd hooks
@@ -111,19 +109,23 @@ $NCREATE_SCRIPT_PATH/nginx_config_create.sh "$SITE_DIR" $DOMAIN $4;
 
 # Add to hosts
 echo -e "\033[0;36mAdding site to hosts:\033[0m"
-echo "127.0.0.1    $DOMAIN" | sudo tee -a /etc/hosts;
+if [[ grep -q $DOMAIN "/etc/hosts" ]]; then
+	echo "\033[0;36mAllready in /etc/hosts\033[0m";
+else
+	echo "127.0.0.1    $DOMAIN" | sudo tee -a /etc/hosts;
+fi
 
 echo -e "\033[0;32mDo you want to create database? (y/n) \033[0m"
 read yn
 
-if [ "$yn" = "y" ]; then
+if [[ "$yn" = "y" ]]; then
 	DATABASE_NAME=`echo $DOMAIN | tr '[\.]' '[_]'`
-	if [ $1 != "global" ]; then
+	if [[ $1 != "global" ]]; then
 		DATABASE_NAME="${USER}_${DATABASE_NAME}"
 	fi
     echo -e "\033[0;32mWhat will the database be named? ($DATABASE_NAME) \033[0m"
 	read DB
-	if [ DB ]; then
+	if [[ ! -z $DB ]]; then
 		DATABASE_NAME=$DB
 	fi
 
