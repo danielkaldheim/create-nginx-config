@@ -63,22 +63,21 @@ if [[ -z $3 ]]; then
                     echo "Please enter Y or N"
         esac
     done
-fi
-
-if [ $3 = "wp" ]; then
-    WORDPRESS="TRUE"
+else
+    if [[ "$3" = "wp" ]]; then
+        WORDPRESS="TRUE"
+    fi
 fi
 
 if [ $WORDPRESS = "TRUE"]
     sed -i.bk 17' a\
 \    include wordpress.conf;\
     ' $CONF_NAME;
-    if [ "$4" = "dev" ]; then
+    if [[ "$4" = "dev" ]]; then
         sed -i.bk "s|www.localhost ||g" $CONF_NAME;
         sed -i.bk "s|/public_html||g" $CONF_NAME;
     fi
 fi
-
 
 WEBDIR="$1/${DOMAIN}"
 sed -i.bk "s/localhost/${DOMAIN}/g" $CONF_NAME;
