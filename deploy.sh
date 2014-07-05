@@ -59,11 +59,13 @@ chown -v $USER:adm $2
 cd $2
 mkdir -v -m 775 $PUBLIC_HTML
 chown -v $USER:adm $PUBLIC_HTML
+touch "${PUBLIC_HTML}/nginx.conf"
+chown -v $USER:adm "${PUBLIC_HTML}/nginx.conf"
 
 mkdir -v -m 775 logs
 chown -v $USER:adm logs
 
-touch nginx.conf
+
 
 SITE_DIR=$(pwd)
 
