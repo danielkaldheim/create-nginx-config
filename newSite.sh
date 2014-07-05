@@ -14,6 +14,9 @@ fi
 
 # Enter project dir
 cd "${2}"
+mkdir public_html
+mkdir logs
+cd public_html
 
 # Init Git, create README.md and make first commit
 git init

@@ -5,7 +5,18 @@ SCRIPT_DIR=$(cd "$(dirname ${BASH_SOURCE[0]})"; pwd)
 
 cd $NGINX_VHOST_PATH
 
-CONF_NAME="${2}.conf"
+
+DOMAIN=$2
+# check the domain is valid!
+PATTERN="^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$";
+if [[ "$DOMAIN" =~ $PATTERN ]]; then
+    DOMAIN=`echo $DOMAIN | tr '[A-Z]' '[a-z]'`
+else
+    echo "\033[0;31mInvalid domain name\033[0m"
+    exit 1
+fi
+
+CONF_NAME="${DOMAIN}.conf"
 
 if [ -f $CONF_NAME ]; then
 
@@ -20,18 +31,18 @@ if [ -f $CONF_NAME ]; then
 
 fi
 
+
 # Add nginx config
+cp "$SCRIPT_DIR/assets/nginx_vhost.conf" $CONF_NAME
+
 if [ "$3" = "wp" ]; then
-    cp "$SCRIPT_DIR/assets/nginx_vhost_wp.conf" $CONF_NAME
-else
-    cp "$SCRIPT_DIR/assets/nginx_vhost.conf" $CONF_NAME
+    sed -i '' 14' a\
+    include wordpress.conf;\
+    ' $CONF_NAME;
 fi
 
-sed -i '' "s/localhost/${2}/" $CONF_NAME;
-
-OLDPATH="/var/www"
-if [ $OLDPATH != $1 ]; then
-    sed -i "s|$OLDPATH|$1|g" $CONF_NAME
-fi
+WEBDIR="$1/${DOMAIN}"
+sed -i '' "s/localhost/${DOMAIN}/g" $CONF_NAME;
+sed -i '' "s|PATH_TO_WEBDIR|$WEBDIR|g" $CONF_NAME;
 
 sudo $SCRIPT_DIR/nginx reload
