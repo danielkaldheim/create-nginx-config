@@ -51,6 +51,7 @@ if [ $3 ]; then
 
 	mkdir $PROJECT_NAME
 
+	# Go into git repo
 	cd $PROJECT_NAME
 
 	git init --bare
@@ -61,6 +62,7 @@ if [ $3 ]; then
 	git config core.sharedrepository 1
 	git config receive.denyNonFastforwards true
 
+	# Go into hooks
 	cd hooks
 
 	if [[ $POST_RECEIVE_SCRIPT_PATH != "" ]]; then
@@ -73,9 +75,10 @@ if [ $3 ]; then
 		chmod +x post-receive
 	fi
 
-	chown -R $USER:adm .
-
+	# Go out of hooks
 	cd ..
+
+	chown -r $USER:adm .
 
 	echo -e "\033[0;36mAdd this to your local git repo \033[1;36mgit remote add deploy git+ssh://${USER}@${HOSTNAME}${SITE_DIR}/${PROJECT_NAME}\033[0m"
 
