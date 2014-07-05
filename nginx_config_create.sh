@@ -3,6 +3,8 @@
 # Save script folder
 SCRIPT_DIR=$(cd "$(dirname ${BASH_SOURCE[0]})"; pwd)
 
+WORDPRESS="FALSE"
+
 cd $NGINX_VHOST_PATH
 
 DOMAIN=$2
@@ -43,7 +45,31 @@ fi
 # Add nginx config
 cp -v "$SCRIPT_DIR/assets/nginx_vhost.conf" $CONF_NAME
 
-if [ "$3" = "wp" ]; then
+if [[ -z $3 ]]; then
+    while true
+    do
+        echo -e "\033[0;32mIs this site a Wordpress Site? [Y/N] \033[0m"
+        read wpyn
+        case $wpyn
+            in
+                [yY])
+                    WORDPRESS="TRUE"
+                    break
+                    ;;
+                [nN])
+                    break
+                    ;;
+                *)
+                    echo "Please enter Y or N"
+        esac
+    done
+fi
+
+if [ $3 = "wp" ]; then
+    WORDPRESS="TRUE"
+fi
+
+if [ $WORDPRESS = "TRUE"]
     sed -i.bk 17' a\
 \    include wordpress.conf;\
     ' $CONF_NAME;

@@ -105,7 +105,7 @@ fi
 
 # Add nginx config
 echo -e "\033[0;36mAdding new nginx config:\033[0m"
-$NCREATE_SCRIPT_PATH/nginx_config_create.sh "$SITE_DIR" $DOMAIN $4;
+$NCREATE_SCRIPT_PATH/nginx_config_create.sh "$SITE_DIR" $DOMAIN;
 
 # Add to hosts
 echo -e "\033[0;36mAdding site to hosts:\033[0m"
@@ -127,7 +127,7 @@ do
 	case $yn
 		in
 			[yY])
-				echo -e "\033[0;32mWhat will the database be named? (press enter for $DATABASE_NAME) \033[0m"
+				echo -e "\033[0;32mWhat will the database be named? (press enter for \033[1;32m$DATABASE_NAME\033[0;32m) \033[0m"
 				read DB
 				if [[ ! -z $DB ]]; then
 					DATABASE_NAME=$DB
