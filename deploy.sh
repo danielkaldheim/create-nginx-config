@@ -107,11 +107,11 @@ fi
 
 # Add nginx config
 echo -e "\033[0;36mAdding new nginx config:\033[0m"
-nConfigCreate "$SITE_DIR" $DOMAIN $4;
+$NCREATE_SCRIPT_PATH/nginx_config_create.sh "$SITE_DIR" $DOMAIN $4;
 
 # Add to hosts
 echo -e "\033[0;36mAdding site to hosts:\033[0m"
-echo "127.0.0.1 $DOMAIN" | sudo tee -a /etc/hosts;
+echo "127.0.0.1    $DOMAIN" | sudo tee -a /etc/hosts;
 
 echo -e "\033[0;32mDo you want to create database? (y/n) \033[0m"
 read yn
