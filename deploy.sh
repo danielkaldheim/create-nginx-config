@@ -49,6 +49,7 @@ if [ !$3 ]; then
 
 	$USUDO mkdir $PROJECT_NAME
 	cd $PROJECT_NAME
+
 	git init --bare
 	git config core.bare false
 	echo -e "\033[0;36mSet worktree \033[1;36m${SITE_DIR}/${PUBLIC_HTML}\033[0m"
@@ -65,9 +66,10 @@ if [ !$3 ]; then
 		ln -s $POST_RECEIVE_SCRIPT_PATH "${HOOKS_PATH}/post-receive"
 	else
 		echo -e "\033[0;36mDownloading post receive script\033[0m"
-		curl -o "post-receive" "https://git.crudus.no/server/post-recive/raw/master/post-receive"
+		$USUDO curl -o "post-receive" "https://git.crudus.no/server/post-recive/raw/master/post-receive"
 		chmod +x post-receive
 	fi
+
 	cd ..
 
 	echo -e "\033[0;36mAdd this to your local git repo \033[1;36mgit remote add deploy git+ssh://${USER}@${HOSTNAME}${SITE_DIR}/${PROJECT_NAME}\033[0m"
