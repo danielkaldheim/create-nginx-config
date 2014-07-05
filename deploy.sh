@@ -30,7 +30,7 @@ fi
 if [ $1 != "global" ]; then
 	if id -u $1 >/dev/null 2>&1; then
 		USER_HOME=$(eval echo ~${1})
-		DEPLOY_DIR="${USER_HOME}/domains/"
+		DEPLOY_DIR="${USER_HOME}/domains"
 		USER=$1
 
 		if [ ! -d $DEPLOY_DIR ]; then
@@ -62,6 +62,8 @@ chown -v $USER:adm $PUBLIC_HTML
 
 mkdir -v -m 775 logs
 chown -v $USER:adm logs
+
+touch nginx.conf
 
 SITE_DIR=$(pwd)
 
