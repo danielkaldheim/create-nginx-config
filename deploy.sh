@@ -107,4 +107,27 @@ fi
 
 # Add nginx config
 echo -e "\033[0;36mAdding new nginx config:\033[0m"
-nConfigCreate "$SITE_DIR" $DOMAIN;
+nConfigCreate "$SITE_DIR" $DOMAIN $4;
+
+# Add to hosts
+echo -e "\033[0;36mAdding site to hosts:\033[0m"
+echo "127.0.0.1 $DOMAIN" | sudo tee -a /etc/hosts;
+
+echo -e "\033[0;32mDo you want to create database? (y/n) \033[0m"
+read yn
+
+if [ "$yn" = "y" ]; then
+	DATABASE_NAME=`echo $DOMAIN | tr '[\.]' '[_]'`
+	if [ $1 != "global" ]; then
+		DATABASE_NAME="${USER}_${DATABASE_NAME}"
+	fi
+    echo -e "\033[0;32mWhat will the database be named? ($DATABASE_NAME) \033[0m"
+	read DB
+	if [ DB != "" ]; then
+		DATABASE_NAME=$DB
+	fi
+
+	# Add database
+	echo -e "\033[0;36mCreating new database: \033[1;36m$DATABASE_NAME\033[0m"
+	#mysql -u$NCREATE_MYSQL_USER --password=$NCREATE_MYSQL_PASSWORD -e "create database $DATABASE_NAME"
+fi

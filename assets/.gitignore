@@ -3,6 +3,7 @@
 .htaccess
 nginx.conf
 *.log
+/logs/
 
 # Uploads
 test/

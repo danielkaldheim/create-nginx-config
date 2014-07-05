@@ -11,6 +11,7 @@ ncreate() {
 			echo -e "\033[0;36mCreating new \033[1;32m WordPress\033[0m site: \033[1;36m$1.dev\033[0m"
 
 			wpcreate "$GLOBAL_WWW_PATH" "$1.dev" "$1";
+			mkdir "$GLOBAL_WWW_PATH/$1.dev/logs"
 		else
 			echo -e "\033[0;36mCreating new site: \033[1;36m$1.dev\033[0m"
 
@@ -19,7 +20,7 @@ ncreate() {
 
 		# Add nginx config
 		echo -e "\033[0;36mAdding new nginx config:\033[0m"
-		nConfigCreate "$GLOBAL_WWW_PATH" "$1.dev" $2;
+		nConfigCreate "$GLOBAL_WWW_PATH" "$1.dev" $2 dev;
 
 		# Add to hosts
 		echo -e "\033[0;36mAdding site to hosts:\033[0m"
