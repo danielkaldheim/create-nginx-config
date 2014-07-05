@@ -40,7 +40,7 @@ echo -e "\033[0;35m$PUBLIC_HTML\033[0m";
 
 SITE_DIR=$(pwd)
 
-if [ !$3 ]; then
+if [ $3 ]; then
 
 	AFTER_SLASH=${3##*/}
 	PROJECT_NAME="${AFTER_SLASH%%\?*}"
