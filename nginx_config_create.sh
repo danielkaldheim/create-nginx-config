@@ -50,4 +50,9 @@ WEBDIR="$1/${DOMAIN}"
 sed -i '' "s/localhost/${DOMAIN}/g" $CONF_NAME;
 sed -i '' "s|PATH_TO_WEBDIR|$WEBDIR|g" $CONF_NAME;
 
-sudo $SCRIPT_DIR/nginx reload
+if [ -f /etc/init.d/nginx ]; then
+    sudo /etc/init.d/nginx reload
+else
+    sudo $SCRIPT_DIR/nginx reload
+fi
+
