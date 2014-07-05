@@ -60,6 +60,9 @@ cd $2
 mkdir -v -m 775 $PUBLIC_HTML
 chown -v $USER:adm $PUBLIC_HTML
 
+mkdir -v -m 775 logs
+chown -v $USER:adm logs
+
 SITE_DIR=$(pwd)
 
 if [ $3 ]; then
