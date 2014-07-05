@@ -3,18 +3,18 @@
 USUDO=""
 DEPLOY_DIR=$GLOBAL_WWW_PATH;
 PUBLIC_HTML="public_html"
-USER=$(whoami)
+USER=nginx
 
 if [ $1 != "global" ]; then
 	if id -u $1 >/dev/null 2>&1; then
 		USER_HOME=$(eval echo ~${1})
 		DEPLOY_DIR="${USER_HOME}/domains/"
-		USUDO="sudo -u $1"
 		USER=$1
 
 		if [ ! -d $DEPLOY_DIR ]; then
 			echo -e "\033[0;36mDeploy dir dosen't exists, creating \033[1;36m$DEPLOY_DIR\033[0m"
-			sudo -u $1 mkdir -m 775 $DEPLOY_DIR
+			mkdir -m 775 $DEPLOY_DIR
+			chown $USER:adm $DEPLOY_DIR
 		fi
 
 	else
@@ -31,12 +31,14 @@ if [ -d $2 ]; then
 fi
 
 echo -e "\033[0;36mCreating sites directories\033[0m";
-$USUDO mkdir -m 775 $2
+mkdir -m 775 $2
+chown $USER:adm $2
 echo -e "\033[0;35m$2\033[0m";
 
 cd $2
-$USUDO mkdir -m 775 $PUBLIC_HTML
-echo -e "\033[0;35m$PUBLIC_HTML\033[0m";
+mkdir -m 775 $PUBLIC_HTML
+chown $USER:adm $PUBLIC_HTML
+echo -e "\033[0;35m$2/$PUBLIC_HTML\033[0m";
 
 SITE_DIR=$(pwd)
 
@@ -47,7 +49,8 @@ if [ $3 ]; then
 	echo -e "\033[0;36mCreating bare git \033[1;36m$PROJECT_NAME\033[0m"
 	echo $SITE_DIR;
 
-	$USUDO mkdir $PROJECT_NAME
+	mkdir $PROJECT_NAME
+
 	cd $PROJECT_NAME
 
 	git init --bare
@@ -66,9 +69,11 @@ if [ $3 ]; then
 		ln -s $POST_RECEIVE_SCRIPT_PATH "${HOOKS_PATH}/post-receive"
 	else
 		echo -e "\033[0;36mDownloading post receive script\033[0m"
-		$USUDO curl -o "post-receive" "https://git.crudus.no/server/post-recive/raw/master/post-receive"
+		curl -o "post-receive" "https://git.crudus.no/server/post-recive/raw/master/post-receive"
 		chmod +x post-receive
 	fi
+
+	chown -R $USER:adm .
 
 	cd ..
 

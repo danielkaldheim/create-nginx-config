@@ -18,6 +18,6 @@ alias wpcreate="$WPCREATE_SCRIPT_PATH/wpcreate.sh"
 alias newSite="$NCREATE_SCRIPT_PATH/newSite.sh"
 alias nConfigCreate="$NCREATE_SCRIPT_PATH/nginx_config_create.sh"
 
-alias ndeploy="$NCREATE_SCRIPT_PATH/deploy.sh"
+alias ndeploy="sudo $NCREATE_SCRIPT_PATH/deploy.sh"
 
 source "$NCREATE_SCRIPT_PATH/bash_ncreate"
