@@ -35,8 +35,8 @@ if [ $1 != "global" ]; then
 
 		if [ ! -d $DEPLOY_DIR ]; then
 			echo -e "\033[0;36mDeploy dir dosen't exists, creating \033[1;36m$DEPLOY_DIR\033[0m"
-			mkdir -m 775 $DEPLOY_DIR
-			chown $USER:adm $DEPLOY_DIR
+			mkdir -v -m 775 $DEPLOY_DIR
+			chown -v $USER:adm $DEPLOY_DIR
 		fi
 
 	else
@@ -53,13 +53,13 @@ if [ -d $2 ]; then
 fi
 
 echo -e "\033[0;36mCreating sites directories\033[0m";
-mkdir -m 775 $2
-chown $USER:adm $2
+mkdir -v -m 775 $2
+chown -v $USER:adm $2
 echo -e "\033[0;35m$2\033[0m";
 
 cd $2
-mkdir -m 775 $PUBLIC_HTML
-chown $USER:adm $PUBLIC_HTML
+mkdir -v -m 775 $PUBLIC_HTML
+chown -v $USER:adm $PUBLIC_HTML
 echo -e "\033[0;35m$2/$PUBLIC_HTML\033[0m";
 
 SITE_DIR=$(pwd)
@@ -70,7 +70,7 @@ if [ $3 ]; then
 	PROJECT_NAME="${AFTER_SLASH%%\?*}"
 	echo -e "\033[0;36mCreating bare git repo \033[1;36m$PROJECT_NAME\033[0m"
 
-	mkdir $PROJECT_NAME
+	mkdir -v $PROJECT_NAME
 
 	# Go into git repo
 	cd $PROJECT_NAME
@@ -83,7 +83,7 @@ if [ $3 ]; then
 	git config core.sharedrepository 1
 	git config receive.denyNonFastforwards true
 
-	chown -R $USER:adm .
+	chown -v -R $USER:adm .
 
 	# Go into hooks
 	cd hooks
@@ -91,11 +91,11 @@ if [ $3 ]; then
 	if [ $POST_RECEIVE_SCRIPT_PATH != "" ]; then
 		echo -e "\033[0;36mLinking post receive script\033[0m"
 		HOOKS_PATH=$(pwd)
-		ln -s $POST_RECEIVE_SCRIPT_PATH "${HOOKS_PATH}/post-receive"
+		ln -v -s $POST_RECEIVE_SCRIPT_PATH "${HOOKS_PATH}/post-receive"
 	else
 		echo -e "\033[0;36mDownloading post receive script\033[0m"
 		curl -k -o "post-receive" "https://git.crudus.no/server/post-recive/raw/master/post-receive"
-		chmod +x post-receive
+		chmod -v +x post-receive
 	fi
 
 	# Go out of hooks
@@ -123,7 +123,7 @@ if [ "$yn" = "y" ]; then
 	fi
     echo -e "\033[0;32mWhat will the database be named? ($DATABASE_NAME) \033[0m"
 	read DB
-	if [ DB != "" ]; then
+	if [ DB ]; then
 		DATABASE_NAME=$DB
 	fi
 
