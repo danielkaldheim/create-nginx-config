@@ -45,9 +45,10 @@ cp -v "$SCRIPT_DIR/assets/nginx_vhost.conf" $CONF_NAME
 
 if [ "$3" = "wp" ]; then
     sed -i.bk 17' a\
-        include wordpress.conf;\
+\    include wordpress.conf;\
     ' $CONF_NAME;
     if [ "$4" = "dev" ]; then
+        sed -i.bk "s|www.localhost ||g" $CONF_NAME;
         sed -i.bk "s|/public_html||g" $CONF_NAME;
     fi
 fi

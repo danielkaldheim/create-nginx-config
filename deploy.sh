@@ -135,7 +135,7 @@ do
 
 				# Add database
 				echo -e "\033[0;36mCreating new database: \033[1;36m$DATABASE_NAME\033[0m"
-				#mysql -u$NCREATE_MYSQL_USER --password=$NCREATE_MYSQL_PASSWORD -e "create database $DATABASE_NAME"
+				mysql -u$NCREATE_MYSQL_USER --password=$NCREATE_MYSQL_PASSWORD -e "create database $DATABASE_NAME"
 				break
 				;;
 			[nN])
