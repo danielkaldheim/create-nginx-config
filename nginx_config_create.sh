@@ -69,7 +69,7 @@ else
     fi
 fi
 
-if [ $WORDPRESS = "TRUE"]; then
+if [[ $WORDPRESS = "TRUE" ]]; then
     sed -i.bk 17' a\
 \    include wordpress.conf;\
     ' $CONF_NAME;
