@@ -109,7 +109,7 @@ $NCREATE_SCRIPT_PATH/nginx_config_create.sh "$SITE_DIR" $DOMAIN $4;
 
 # Add to hosts
 echo -e "\033[0;36mAdding site to hosts:\033[0m"
-if [[ grep -q $DOMAIN "/etc/hosts" ]]; then
+if grep -q $DOMAIN "/etc/hosts"; then
 	echo "\033[0;36mAllready in /etc/hosts\033[0m";
 else
 	echo "127.0.0.1    $DOMAIN" | sudo tee -a /etc/hosts;
