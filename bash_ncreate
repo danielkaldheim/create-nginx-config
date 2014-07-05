@@ -2,23 +2,37 @@
 
 ncreate() {
 
-	# Create folders
-	if [ "$2" = "wp" ]; then
-		/Users/daniel/Dropbox/WebApps/wp-create-composer/wpcreate.sh "/var/www" "$1.dev" "$1";
+	# Check folders
+	if [ -d "$GLOBAL_WWW_PATH/$1.dev" ]; then
+		echo -e "\033[0;31mCan't create new site, path exists: \033[1;31m$GLOBAL_WWW_PATH/$1.dev\033[0m"
 	else
-		/Users/daniel/Dropbox/WebApps/create_nginx_osx/newSite.sh "/var/www" "$1.dev" "$1";
+		# Create folders
+		if [ "$2" = "wp" ]; then
+			echo -e "\033[0;36mCreating new \033[1;32m WordPress\033[0m site: \033[1;36m$1.dev\033[0m"
+
+			wpcreate "$GLOBAL_WWW_PATH" "$1.dev" "$1";
+		else
+			echo -e "\033[0;36mCreating new site: \033[1;36m$1.dev\033[0m"
+
+			newSite "$GLOBAL_WWW_PATH" "$1.dev" "$1";
+		fi
+
+		# Add nginx config
+		echo -e "\033[0;36mAdding new nginx config:\033[0m"
+		nConfigCreate "$GLOBAL_WWW_PATH" "$1.dev" $2;
+
+		# Add to hosts
+		echo -e "\033[0;36mAdding site to hosts:\033[0m"
+		echo "127.0.0.1 $1.dev" | sudo tee -a /etc/hosts;
+
+		# Add database
+		echo -e "\033[0;36mCreating new database: \033[1;36m$1\033[0m"
+		mysql -u$NCREATE_MYSQL_USER --password=$NCREATE_MYSQL_PASSWORD -e "create database $1"
+
+		if [ $OPEN_SUBLIME_TEXT = "TRUE" ]; then
+			# Open sublime text
+			echo -e "\033[0;32mOpening Sublime Text...\033[0m"
+			subl "$GLOBAL_WWW_PATH/$1.dev/"
+		fi
 	fi
-
-	# Add nginx config
-	/Users/daniel/Dropbox/WebApps/create_nginx_osx/nginx_config_create.sh "/var/www" "$1.dev" $2;
-
-	# Add to hosts
-	echo "127.0.0.1 $1.dev" | sudo tee -a /etc/hosts;
-
-	# Add database
-	mysql -uroot --password=root -e "create database $1"
-
-	# Open sublime text
-	subl "/var/www/$1.dev/"
-
 }

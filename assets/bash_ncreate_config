@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+export NCREATE_MYSQL_USER="root"
+export NCREATE_MYSQL_PASSWORD="root"
+
+export OPEN_SUBLIME_TEXT="TRUE"
+export GLOBAL_WWW_PATH="/var/www"
+
+export NCREATE_SCRIPT_PATH="PATH/TO/create_nginx_osx"
+export WPCREATE_SCRIPT_PATH="PATH/TO/wp-create-composer"
+
+export NGINX_VHOST_PATH="/etc/nginx/sites-enabled"
+
+# Where to soft link post receive script
+export POST_RECEIVE_SCRIPT_PATH=""
+
+alias wpcreate="$WPCREATE_SCRIPT_PATH/wpcreate.sh"
+alias newSite="$NCREATE_SCRIPT_PATH/newSite.sh"
+alias nConfigCreate="$NCREATE_SCRIPT_PATH/nginx_config_create.sh"
+
+alias ndeploy="$NCREATE_SCRIPT_PATH/deploy.sh"
+
+source "$NCREATE_SCRIPT_PATH/bash_ncreate"
