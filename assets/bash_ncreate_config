@@ -15,13 +15,15 @@ export PHP_FPM_POOL_PATH="/etc/php-fpm.d"
 export NGINX_DEFAULT_USER="nginx"
 export NGINX_DEFAULT_GROUP="nginx"
 
+export DEFAULT_ADMIN_GROUP="adm"
+
 # Where to soft link post receive script
 export POST_RECEIVE_SCRIPT_PATH=""
 
 alias wpcreate="$WPCREATE_SCRIPT_PATH/wpcreate.sh"
+alias laravelcreate="$NCREATE_SCRIPT_PATH/newLaravel.sh"
 alias newSite="$NCREATE_SCRIPT_PATH/newSite.sh"
 alias nConfigCreate="$NCREATE_SCRIPT_PATH/nginx_config_create.sh"
+alias ncreate="$NCREATE_SCRIPT_PATH/ncreate.sh"
 
 alias ndeploy="sudo $NCREATE_SCRIPT_PATH/deploy.sh"
-
-source "$NCREATE_SCRIPT_PATH/bash_ncreate"

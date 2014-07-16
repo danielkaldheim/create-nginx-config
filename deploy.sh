@@ -19,7 +19,7 @@ fi
 
 DOMAIN=$2
 # check the domain is valid!
-PATTERN="^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$";
+PATTERN="^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9\_]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$";
 if [[ "$DOMAIN" =~ $PATTERN ]]; then
 	DOMAIN=`echo $DOMAIN | tr '[A-Z]' '[a-z]'`
 else
@@ -36,7 +36,7 @@ if [ $1 != "global" ]; then
 		if [ ! -d $DEPLOY_DIR ]; then
 			echo -e "\033[0;36mDeploy dir dosen't exists, creating \033[1;36m$DEPLOY_DIR\033[0m"
 			mkdir -v -m 775 $DEPLOY_DIR
-			chown -v $USER:adm $DEPLOY_DIR
+			chown -v $USER:$DEFAULT_ADMIN_GROUP $DEPLOY_DIR
 		fi
 
 	else
@@ -54,16 +54,16 @@ fi
 
 echo -e "\033[0;36mCreating sites directories\033[0m";
 mkdir -v -m 775 $2
-chown -v $USER:adm $2
+chown -v $USER:$DEFAULT_ADMIN_GROUP $2
 
 cd $2
 mkdir -v -m 775 $PUBLIC_HTML
-chown -v $USER:adm $PUBLIC_HTML
+chown -v $USER:$DEFAULT_ADMIN_GROUP $PUBLIC_HTML
 touch "${PUBLIC_HTML}/nginx.conf"
-chown -v $USER:adm "${PUBLIC_HTML}/nginx.conf"
+chown -v $USER:$DEFAULT_ADMIN_GROUP "${PUBLIC_HTML}/nginx.conf"
 
 mkdir -v -m 775 logs
-chown -v $USER:adm logs
+chown -v $USER:$DEFAULT_ADMIN_GROUP logs
 
 
 
@@ -88,7 +88,7 @@ if [ $3 ]; then
 	git config core.sharedrepository 1
 	git config receive.denyNonFastforwards true
 
-	chown -R $USER:adm .
+	chown -R $USER:$DEFAULT_ADMIN_GROUP .
 
 	# Go into hooks
 	cd hooks

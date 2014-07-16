@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SKIPPHPFPM="FALSE"
+
 # Save script folder
 SCRIPT_DIR=$(cd "$(dirname ${BASH_SOURCE[0]})"; pwd)
 
@@ -7,10 +9,8 @@ WORDPRESS="FALSE"
 
 DOMAIN=$2
 
-echo $4
-
 # check the domain is valid!
-PATTERN="^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$";
+PATTERN="^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9\_]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$";
 if [[ "$DOMAIN" =~ $PATTERN ]]; then
     DOMAIN=`echo $DOMAIN | tr '[A-Z]' '[a-z]'`
 else
@@ -66,7 +66,8 @@ if [ -f $CONF_NAME ]; then
                 break
                 ;;
             [nN])
-                exit 2
+                SKIPPHPFPM="TRUE"
+                break
                 ;;
             *)
                 echo "Please enter Y or N"
@@ -74,28 +75,29 @@ if [ -f $CONF_NAME ]; then
     done
 fi
 
-cp -v "$SCRIPT_DIR/assets/php-fpm.conf" $CONF_NAME
-sed -i.bk "s/DOMAIN/${DOMAIN}/g" $CONF_NAME;
-sed -i.bk "s|PATH_TO_WEBDIR|$WEBDIR|g" $CONF_NAME;
-sed -i.bk "s|{USER}|$5|g" $CONF_NAME;
-sed -i.bk "s|{GROUP}|$6|g" $CONF_NAME;
-sed -i.bk "s|{LISTEN_USER}|$NGINX_DEFAULT_USER|g" $CONF_NAME;
-sed -i.bk "s|{LISTEN_GROUP}|$NGINX_DEFAULT_GROUP|g" $CONF_NAME;
+if [ "${SKIPPHPFPM}" = "FALSE" ]; then
+    cp -v "$SCRIPT_DIR/assets/php-fpm.conf" $CONF_NAME
+    sed -i.bk "s/DOMAIN/${DOMAIN}/g" $CONF_NAME;
+    sed -i.bk "s|PATH_TO_WEBDIR|$WEBDIR|g" $CONF_NAME;
+    sed -i.bk "s|{USER}|$5|g" $CONF_NAME;
+    sed -i.bk "s|{GROUP}|$6|g" $CONF_NAME;
+    sed -i.bk "s|{LISTEN_USER}|$NGINX_DEFAULT_USER|g" $CONF_NAME;
+    sed -i.bk "s|{LISTEN_GROUP}|$NGINX_DEFAULT_GROUP|g" $CONF_NAME;
 
-if [[ "$4" = "dev" ]]; then
-    sed -i.bk "s|{DISPLAY_ERRORS}|On|g" $CONF_NAME;
-else
-    sed -i.bk "s|{DISPLAY_ERRORS}|Off|g" $CONF_NAME;
+    if [[ "$4" = "dev" ]]; then
+        sed -i.bk "s|{DISPLAY_ERRORS}|On|g" $CONF_NAME;
+    else
+        sed -i.bk "s|{DISPLAY_ERRORS}|Off|g" $CONF_NAME;
+    fi
+
+    rm "$CONF_NAME.bk"
+
+    if [ -f /etc/init.d/php-fpm ]; then
+        sudo /etc/init.d/php-fpm reload
+    else
+        sudo $SCRIPT_DIR/php-fpm reload
+    fi
 fi
-
-rm "$CONF_NAME.bk"
-
-if [ -f /etc/init.d/php-fpm ]; then
-    sudo /etc/init.d/php-fpm reload
-else
-    sudo $SCRIPT_DIR/php-fpm reload
-fi
-
 # Add nginx config
 echo $NGINX_VHOST_PATH
 cd $NGINX_VHOST_PATH
