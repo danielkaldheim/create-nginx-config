@@ -42,6 +42,15 @@ location / {
 }
 EOL
 
+mkdir -v -m 775 app/lang/nb
+cd app/lang/nb
+
+wget https://raw.githubusercontent.com/caouecs/Laravel4-lang/master/nb/pagination.php
+wget https://raw.githubusercontent.com/caouecs/Laravel4-lang/master/nb/reminders.php
+wget https://raw.githubusercontent.com/caouecs/Laravel4-lang/master/nb/validation.php
+
+cd ../../../
+
 echo "Working on app/config/local/database.php...";
 sed -i.bk -E "s/'database'([[:space:]]*)=> 'homestead'/'database'\1=> '${3}'/g" app/config/local/database.php;
 sed -i.bk -E "s/'username'([[:space:]]*)=> 'homestead'/'username'\1=> '${NCREATE_MYSQL_USER}'/g" app/config/local/database.php;
@@ -50,7 +59,7 @@ sed -i.bk -E "s/'prefix'([[:space:]]*)=> ''/'prefix'\1=> '${SHORT_SLUG}'/g" app/
 rm -f app/config/local/database.php.bk
 
 sed -i.bk "s|'timezone' => 'UTC'|'timezone' => 'Europe/Oslo'|g" app/config/app.php;
-sed -i.bk "s|'locale' => 'en'|'locale' => 'nb_no'|g" app/config/app.php;
+sed -i.bk "s|'locale' => 'en'|'locale' => 'nb'|g" app/config/app.php;
 rm -f app/config/app.php.bk
 
 rm -f app/config/local/app.php
