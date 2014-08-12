@@ -51,6 +51,13 @@ wget https://raw.githubusercontent.com/caouecs/Laravel4-lang/master/nb/validatio
 
 cd ../../../
 
+# Add autocomplete to artisan
+cd app/commands
+wget https://raw.githubusercontent.com/janka/artisanBashCompletion/master/listForBash.php
+cd ../../
+
+echo 'Artisan::add(new listForBash);' >> app/start/artisan.php
+
 echo "Working on app/config/local/database.php...";
 sed -i.bk -E "s/'database'([[:space:]]*)=> 'homestead'/'database'\1=> '${3}'/g" app/config/local/database.php;
 sed -i.bk -E "s/'username'([[:space:]]*)=> 'homestead'/'username'\1=> '${NCREATE_MYSQL_USER}'/g" app/config/local/database.php;
@@ -70,7 +77,8 @@ sed -i.bk "s|'url' => 'http://localhost'|'url' => 'http://${2}'|g" app/config/lo
 
 sed -i.bk "57,\$d" app/config/local/app.php;
 
-sed -i.bk '57i\'$'\n'');'$'\n' app/config/local/app.php;
+#sed -i.bk '57i\'$'\n'');'$'\n' app/config/local/app.php;
+echo ');' >> app/config/local/app.php;
 
 rm -f app/config/local/app.php.bk
 

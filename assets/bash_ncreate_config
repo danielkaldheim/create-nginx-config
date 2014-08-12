@@ -27,3 +27,6 @@ alias nConfigCreate="$NCREATE_SCRIPT_PATH/nginx_config_create.sh"
 alias ncreate="$NCREATE_SCRIPT_PATH/ncreate.sh"
 
 alias ndeploy="sudo $NCREATE_SCRIPT_PATH/deploy.sh"
+
+# Load artisan autocomplete
+source "$NCREATE_SCRIPT_PATH/assets/bash_artisan"
