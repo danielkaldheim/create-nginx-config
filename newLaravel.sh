@@ -62,7 +62,7 @@ echo "Working on app/config/local/database.php...";
 sed -i.bk -E "s/'database'([[:space:]]*)=> 'homestead'/'database'\1=> '${3}'/g" app/config/local/database.php;
 sed -i.bk -E "s/'username'([[:space:]]*)=> 'homestead'/'username'\1=> '${NCREATE_MYSQL_USER}'/g" app/config/local/database.php;
 sed -i.bk -E "s/'password'([[:space:]]*)=> 'secret'/'password'\1=> '${NCREATE_MYSQL_PASSWORD}'/g" app/config/local/database.php;
-sed -i.bk -E "s/'prefix'([[:space:]]*)=> ''/'prefix'\1=> '${SHORT_SLUG}'/g" app/config/local/database.php;
+sed -i.bk -E "s/'prefix'([[:space:]]*)=> ''/'prefix'\1=> '${SHORT_SLUG}_'/g" app/config/local/database.php;
 rm -f app/config/local/database.php.bk
 
 sed -i.bk "s|'timezone' => 'UTC'|'timezone' => 'Europe/Oslo'|g" app/config/app.php;
