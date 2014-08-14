@@ -111,3 +111,6 @@ cp wordpress/index.php .
 sed -e "s/require( dirname( __FILE__ ) . '\/wp-blog-header.php' );/require( dirname( __FILE__ ) . '\/wordpress\/wp-blog-header.php' );/" wordpress/index.php > index.php
 git add index.php
 git commit -m "Added index.php and pointed to correct location"
+
+# Add a blank nginx config
+touch nginx.conf

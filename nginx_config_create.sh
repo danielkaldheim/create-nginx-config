@@ -130,9 +130,9 @@ if [[ $WORDPRESS = "TRUE" ]]; then
     sed -i.bk 22' a\
 \    include wordpress.conf;\
     ' $CONF_NAME;
-    if [[ "$4" = "dev" ]]; then
-        sed -i.bk "s|/public_html||g" $CONF_NAME;
-    fi
+    # if [[ "$4" = "dev" ]]; then
+    #     sed -i.bk "s|/public_html||g" $CONF_NAME;
+    # fi
 fi
 
 if [[ "$4" = "dev" ]]; then
