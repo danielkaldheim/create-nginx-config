@@ -7,7 +7,6 @@ export OPEN_SUBLIME_TEXT="TRUE"
 export GLOBAL_WWW_PATH="/var/www"
 
 export NCREATE_SCRIPT_PATH="PATH/TO/create_nginx_osx"
-export WPCREATE_SCRIPT_PATH="PATH/TO/wp-create-composer"
 
 export NGINX_VHOST_PATH="/etc/nginx/sites-enabled"
 export PHP_FPM_POOL_PATH="/etc/php-fpm.d"
@@ -20,7 +19,7 @@ export DEFAULT_ADMIN_GROUP="adm"
 # Where to soft link post receive script
 export POST_RECEIVE_SCRIPT_PATH=""
 
-alias wpcreate="$WPCREATE_SCRIPT_PATH/wpcreate.sh"
+alias wpcreate="$NCREATE_SCRIPT_PATH/wpcreate.sh"
 alias laravelcreate="$NCREATE_SCRIPT_PATH/newLaravel.sh"
 alias newSite="$NCREATE_SCRIPT_PATH/newSite.sh"
 alias nConfigCreate="$NCREATE_SCRIPT_PATH/nginx_config_create.sh"
