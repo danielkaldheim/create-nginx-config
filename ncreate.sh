@@ -13,6 +13,22 @@ else
     exit 1
 fi
 
+if [[ ! -z $3 ]]; then
+	git ls-remote $3 --quiet > /dev/null 2>&1
+	ISGIT=$?;
+	if [[ $ISGIT -eq 0 ]]; then
+		GIT=$3
+		echo -e "With git from ${GIT}";
+	fi
+elif [[ ! -z $2 ]]; then
+	git ls-remote $2 --quiet > /dev/null 2>&1
+	ISGIT=$?;
+	if [[ $ISGIT -eq 0 ]]; then
+		GIT=$2
+		echo -e "With git from ${GIT}";
+	fi
+fi
+
 # Check folders
 if [ -d "$GLOBAL_WWW_PATH/$DOMAIN" ]; then
 	echo -e "\033[0;31mCan't create new site, path exists: \033[1;31m$GLOBAL_WWW_PATH/$DOMAIN\033[0m"
@@ -54,16 +70,16 @@ else
 	if [ "$2" = "wp" ]; then
 		echo -e "\033[0;36mCreating new \033[1;32mWordPress\033[0m\033[0;36m site: \033[1;36m$DOMAIN\033[0m"
 
-		$NCREATE_SCRIPT_PATH/wpcreate.sh "$GLOBAL_WWW_PATH" "$DOMAIN" "$DATABASE_NAME";
+		$NCREATE_SCRIPT_PATH/wpcreate.sh "$GLOBAL_WWW_PATH" "$DOMAIN" "$DATABASE_NAME" $GIT;
 
 	elif  [ "$2" = "laravel" ]; then
 		echo -e "\033[0;36mCreating new \033[1;32mLaravel\033[0m\033[0;36m site: \033[1;36m$DOMAIN\033[0m"
 
-		$NCREATE_SCRIPT_PATH/newLaravel.sh "$GLOBAL_WWW_PATH" "$DOMAIN" "$DATABASE_NAME";
+		$NCREATE_SCRIPT_PATH/newLaravel.sh "$GLOBAL_WWW_PATH" "$DOMAIN" "$DATABASE_NAME" $GIT;
 	else
 		echo -e "\033[0;36mCreating new site: \033[1;36m$DOMAIN\033[0m"
 
-		$NCREATE_SCRIPT_PATH/newSite.sh "$GLOBAL_WWW_PATH" "$DOMAIN" "$DATABASE_NAME";
+		$NCREATE_SCRIPT_PATH/newSite.sh "$GLOBAL_WWW_PATH" "$DOMAIN" "$DATABASE_NAME" $GIT;
 	fi
 
 	# Add nginx config

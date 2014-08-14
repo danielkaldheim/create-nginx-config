@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ~/.bash_ncreate_config
+
 # Save script folder
 SCRIPT_DIR=$(cd "$(dirname ${BASH_SOURCE[0]})"; pwd)
 
@@ -14,23 +16,36 @@ fi
 
 # Enter project dir
 cd "${2}"
-mkdir -v public_html
 mkdir -v logs
-cd public_html
 
-# Init Git, create README.md and make first commit
-git init
-touch README.md
-echo "# ${2}" >> README.md
-echo "Database name: ${3}" >> README.md
+if [ ! -z "$4" ]; then
 
-git add README.md
-git commit -m "Initial commit."
+	$NCREATE_SCRIPT_PATH/gitPublish.sh "${1}/${2}" $4 public_html
+	cd public_html
 
-# Add .gitignore
-cp -v "$SCRIPT_DIR/assets/.gitignore" .
-git add .gitignore
-git commit -m "Add .gitignore."
+	if [ ! -f nginx.conf ]; then
+		# Add a blank nginx config
+		touch nginx.conf
+	fi
 
-# Add a blank nginx config
-touch nginx.conf
+else
+	mkdir -v public_html
+	cd public_html
+	# Init Git, create README.md and make first commit
+	git init
+	touch README.md
+	echo "# ${2}" >> README.md
+	echo "Database name: ${3}" >> README.md
+
+	git add README.md
+	git commit -m "Initial commit."
+
+	# Add .gitignore
+	cp -v "$SCRIPT_DIR/assets/.gitignore" .
+	git add .gitignore
+	git commit -m "Add .gitignore."
+
+	# Add a blank nginx config
+	touch nginx.conf
+
+fi
