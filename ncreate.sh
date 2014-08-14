@@ -54,8 +54,8 @@ else
 	if [ "$2" = "wp" ]; then
 		echo -e "\033[0;36mCreating new \033[1;32mWordPress\033[0m\033[0;36m site: \033[1;36m$DOMAIN\033[0m"
 
-		$WPCREATE_SCRIPT_PATH/wpcreate.sh "$GLOBAL_WWW_PATH" "$DOMAIN" "$DATABASE_NAME";
-		mkdir "$GLOBAL_WWW_PATH/$DOMAIN/logs"
+		$NCREATE_SCRIPT_PATH/wpcreate.sh "$GLOBAL_WWW_PATH" "$DOMAIN" "$DATABASE_NAME";
+
 	elif  [ "$2" = "laravel" ]; then
 		echo -e "\033[0;36mCreating new \033[1;32mLaravel\033[0m\033[0;36m site: \033[1;36m$DOMAIN\033[0m"
 

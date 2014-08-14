@@ -18,6 +18,10 @@ fi
 # Enter project dir
 cd "${2}"
 
+mkdir -v public_html
+mkdir -v logs
+cd public_html
+
 # Init Git, create README.md and make first commit
 git init
 touch README.md
