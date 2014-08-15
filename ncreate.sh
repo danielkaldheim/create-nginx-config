@@ -32,6 +32,38 @@ fi
 # Check folders
 if [ -d "$GLOBAL_WWW_PATH/$DOMAIN" ]; then
 	echo -e "\033[0;31mCan't create new site, path exists: \033[1;31m$GLOBAL_WWW_PATH/$DOMAIN\033[0m"
+	echo -e "\033[0;32mDo you want to create new config file or delete \033[1;32m$GLOBAL_WWW_PATH/$DOMAIN? [C/R/I]\033[0m"
+
+	while true
+	do
+		read rmChoice
+		case $rmChoice
+			in
+				[cC])
+					# Add nginx config
+					echo -e "\033[0;36mAdding new nginx config:\033[0m"
+					$NCREATE_SCRIPT_PATH/nginx_config_create.sh "$GLOBAL_WWW_PATH" "$DOMAIN" "$2" 'dev' "_www" "_www";
+
+					# Add to hosts
+					echo -e "\033[0;36mAdding site to hosts:\033[0m"
+					if grep -q "$DOMAIN" "/etc/hosts"; then
+						echo -e "\033[0;36mAllready in /etc/hosts\033[0m";
+					else
+						echo "127.0.0.1    $DOMAIN" | sudo tee -a /etc/hosts;
+					fi
+					break;
+					;;
+				[rR])
+					$NCREATE_SCRIPT_PATH/ndelete.sh $DOMAIN
+					break;
+					;;
+				[iI])
+					exit 1;
+					;;
+				*)
+					echo "Please enter C for create new config, R for remove or I for ignore"
+		esac
+	done
 else
 
 	while true
@@ -94,12 +126,12 @@ else
 		echo "127.0.0.1    $DOMAIN" | sudo tee -a /etc/hosts;
 	fi
 
-	cd "$GLOBAL_WWW_PATH/$DOMAIN/"
+	cd "${GLOBAL_WWW_PATH}/${DOMAIN}/"
 
 	if [ $OPEN_SUBLIME_TEXT = "TRUE" ]; then
 		# Open sublime text
 		echo -e "\033[0;32mOpening Sublime Text...\033[0m"
-		subl "$GLOBAL_WWW_PATH/$DOMAIN/"
+		subl "${GLOBAL_WWW_PATH}/${DOMAIN}/"
 	fi
 fi
 
