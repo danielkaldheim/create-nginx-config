@@ -38,6 +38,9 @@ else
 	# Init Git, create README.md and make first commit
 	git init
 	touch README.md
+
+	echo "# ${2}" >> README.md
+
 	git add README.md
 	git commit -m "Initial commit."
 

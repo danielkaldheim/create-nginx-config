@@ -21,55 +21,88 @@ composer create-project laravel/laravel "${2}" --prefer-dist
 cd "${2}"
 
 mkdir -v -m 775 logs
-sudo chown -v _www:$DEFAULT_ADMIN_GROUP logs
+	sudo chown -v _www:$DEFAULT_ADMIN_GROUP logs
 
-echo '*.log' >> .gitignore
-echo '/logs/' >> .gitignore
-echo 'app/config/local/' >> .gitignore
+if [ ! -z "$4" ]; then
 
-mv -v public/ public_html
+	$NCREATE_SCRIPT_PATH/gitPublish.sh "${1}/${2}" $4
 
-echo -e "Working on bootstrap/paths.php...";
-sed -i.bk "s|'public' => __DIR__.'/../public'|'public' => __DIR__.'/../public_html'|g" bootstrap/paths.php;
-rm -f bootstrap/paths.php.bk
+	if [ -d public ]; then
+		mv -v public/ public_html
 
-# Add a blank nginx config
-touch public_html/nginx.conf
+		echo -e "Working on bootstrap/paths.php...";
+		sed -i.bk "s|'public' => __DIR__.'/../public'|'public' => __DIR__.'/../public_html'|g" bootstrap/paths.php;
+		rm -f bootstrap/paths.php.bk
+	fi
 
-cat >public_html/nginx.conf <<EOL
+	if [ ! -f public_html/nginx.conf ]; then
+		# Add a blank nginx config
+		touch public_html/nginx.conf
+
+		cat >public_html/nginx.conf <<EOL
+location / {
+    try_files \$uri \$uri/ /index.php?\$query_string;
+}
+EOL
+	fi
+
+else
+
+	echo '*.log' >> .gitignore
+	echo '/logs/' >> .gitignore
+	echo 'app/config/local/' >> .gitignore
+
+	mv -v public/ public_html
+
+	echo -e "Working on bootstrap/paths.php...";
+	sed -i.bk "s|'public' => __DIR__.'/../public'|'public' => __DIR__.'/../public_html'|g" bootstrap/paths.php;
+	rm -f bootstrap/paths.php.bk
+
+	# Add a blank nginx config
+	touch public_html/nginx.conf
+
+	cat >public_html/nginx.conf <<EOL
 location / {
     try_files \$uri \$uri/ /index.php?\$query_string;
 }
 EOL
 
-mkdir -v -m 775 app/lang/nb
-cd app/lang/nb
+	mkdir -v -m 775 app/lang/nb
+	cd app/lang/nb
 
-wget https://raw.githubusercontent.com/caouecs/Laravel4-lang/master/nb/pagination.php
-wget https://raw.githubusercontent.com/caouecs/Laravel4-lang/master/nb/reminders.php
-wget https://raw.githubusercontent.com/caouecs/Laravel4-lang/master/nb/validation.php
+	wget https://raw.githubusercontent.com/caouecs/Laravel4-lang/master/nb/pagination.php
+	wget https://raw.githubusercontent.com/caouecs/Laravel4-lang/master/nb/reminders.php
+	wget https://raw.githubusercontent.com/caouecs/Laravel4-lang/master/nb/validation.php
 
-cd ../../../
+	cd ../../../
 
-# Add autocomplete to artisan
-cd app/commands
-wget https://raw.githubusercontent.com/janka/artisanBashCompletion/master/listForBash.php
-cd ../../
+	# Add autocomplete to artisan
+	cd app/commands
+	wget https://raw.githubusercontent.com/janka/artisanBashCompletion/master/listForBash.php
+	cd ../../
 
-echo 'Artisan::add(new listForBash);' >> app/start/artisan.php
+	echo 'Artisan::add(new listForBash);' >> app/start/artisan.php
 
-echo "Working on app/config/local/database.php...";
-sed -i.bk -E "s/'database'([[:space:]]*)=> 'homestead'/'database'\1=> '${3}'/g" app/config/local/database.php;
-sed -i.bk -E "s/'username'([[:space:]]*)=> 'homestead'/'username'\1=> '${NCREATE_MYSQL_USER}'/g" app/config/local/database.php;
-sed -i.bk -E "s/'password'([[:space:]]*)=> 'secret'/'password'\1=> '${NCREATE_MYSQL_PASSWORD}'/g" app/config/local/database.php;
-sed -i.bk -E "s/'prefix'([[:space:]]*)=> ''/'prefix'\1=> '${SHORT_SLUG}_'/g" app/config/local/database.php;
-rm -f app/config/local/database.php.bk
+	sed -i.bk "s|'timezone' => 'UTC'|'timezone' => 'Europe/Oslo'|g" app/config/app.php;
+	sed -i.bk "s|'locale' => 'en'|'locale' => 'nb'|g" app/config/app.php;
+	rm -f app/config/app.php.bk
 
-sed -i.bk "s|'timezone' => 'UTC'|'timezone' => 'Europe/Oslo'|g" app/config/app.php;
-sed -i.bk "s|'locale' => 'en'|'locale' => 'nb'|g" app/config/app.php;
-rm -f app/config/app.php.bk
 
-rm -f app/config/local/app.php
+	echo -e "Working on bootstrap/start.php...";
+	sed -i.bk "s/'local' => array('homestead')/'local' => array('${HOSTNAME}', '${2}', '${3}')/g" bootstrap/start.php;
+	rm -f bootstrap/start.php.bk
+
+	# git init
+	git init
+	git add .
+	git commit -m "Initial commit."
+
+fi
+
+if [ -f app/config/local/app.php ]; then
+	rm -f app/config/local/app.php
+fi
+
 cp app/config/app.php app/config/local/app.php
 
 sed -i.bk "s|'debug' => false|'debug' => true|g" app/config/local/app.php;
@@ -79,17 +112,19 @@ sed -i.bk "57,\$d" app/config/local/app.php;
 
 #sed -i.bk '57i\'$'\n'');'$'\n' app/config/local/app.php;
 echo ');' >> app/config/local/app.php;
-
 rm -f app/config/local/app.php.bk
 
-echo -e "Working on bootstrap/start.php...";
-sed -i.bk "s/'local' => array('homestead')/'local' => array('${HOSTNAME}', '${2}', '${3}')/g" bootstrap/start.php;
-rm -f bootstrap/start.php.bk
+echo "Working on app/config/local/database.php...";
+sed -i.bk -E "s/'database'([[:space:]]*)=> 'homestead'/'database'\1=> '${3}'/g" app/config/local/database.php;
+sed -i.bk -E "s/'username'([[:space:]]*)=> 'homestead'/'username'\1=> '${NCREATE_MYSQL_USER}'/g" app/config/local/database.php;
+sed -i.bk -E "s/'password'([[:space:]]*)=> 'secret'/'password'\1=> '${NCREATE_MYSQL_PASSWORD}'/g" app/config/local/database.php;
+sed -i.bk -E "s/'prefix'([[:space:]]*)=> ''/'prefix'\1=> '${SHORT_SLUG}_'/g" app/config/local/database.php;
+rm -f app/config/local/database.php.bk
+
+# fix storage
+if [ ! -d app/storage ]; then
+	mkdir -v app/storage
+fi
 
 sudo chown -v -R _www:$DEFAULT_ADMIN_GROUP app/storage/
 sudo chmod -v -R 775 app/storage/
-
-# git init
-git init
-git add .
-git commit -m "Initial commit."
