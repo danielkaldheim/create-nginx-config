@@ -19,9 +19,9 @@
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DESC="PHP-FPM Daemon"
 NAME=php-fpm
-PREFIX=/usr/local/Cellar/php55/5.5.10
+PREFIX=/usr/local/
 DAEMON=$PREFIX/sbin/$NAME
-CONF=/usr/local/etc/php/5.5/$NAME.conf
+CONF=/usr/local/etc/php/current/$NAME.conf
 PID=/var/run/$NAME.pid
 SCRIPT_DIR=$(cd "$(dirname ${BASH_SOURCE[0]})"; pwd)
 SCRIPT=$SCRIPT_DIR/$NAME

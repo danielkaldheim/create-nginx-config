@@ -19,8 +19,8 @@
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DESC="Nginx Daemon"
 NAME=nginx
-PREFIX=/usr/local/openresty/nginx
-DAEMON=$PREFIX/sbin/$NAME
+PREFIX=/usr/local/
+DAEMON=$PREFIX/bin/$NAME
 CONF=/usr/local/etc/nginx/$NAME.conf
 PID=/var/run/$NAME.pid
 SCRIPT_DIR=$(cd "$(dirname ${BASH_SOURCE[0]})"; pwd)
