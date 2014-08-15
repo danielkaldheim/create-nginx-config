@@ -11,6 +11,13 @@ if [[ $? -eq 0 ]]; then
 
 	if [ -f composer.json ]; then
 		echo -e "\033[0;36mUpdating Composer\033[0m"
+		# Check composer version
+		composerversion=$(composer --version)
+
+		if [[ "$composerversion" =~ "/usr/bin/composer self-update" ]]
+			then
+			sudo /usr/bin/composer self-update
+		fi
 		composer update
 	fi
 
