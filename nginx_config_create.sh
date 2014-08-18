@@ -19,7 +19,13 @@ else
 fi
 
 CONF_NAME="${DOMAIN}.conf"
-WEBDIR="$1/${DOMAIN}"
+DIR="$1/${DOMAIN}"
+WEBDIR="${DIR}"
+LOGDIR="${DIR}/logs"
+
+if [[ -d "${WEBDIR}/public_html" ]]; then
+    WEBDIR="$1/${DOMAIN}/public_html";
+fi
 
 UPSTREAMNAME=`echo $DOMAIN | tr '[\.]' '[\-]'`
 UPSTREAMNAME="$UPSTREAMNAME-socket"
@@ -126,14 +132,29 @@ fi
 
 cp -v "$SCRIPT_DIR/assets/nginx_vhost.conf" $CONF_NAME
 
+if [[ -f "${WEBDIR}/nginx.conf" ]]; then
+        sed -i.bk 18' a\
+\    include PATH_TO_WEBDIR/nginx.conf;\
+    ' $CONF_NAME;
+fi
+
 if [[ $WORDPRESS = "TRUE" ]]; then
-    sed -i.bk 22' a\
+    sed -i.bk 19' a\
 \    include wordpress.conf;\
     ' $CONF_NAME;
     # if [[ "$4" = "dev" ]]; then
     #     sed -i.bk "s|/public_html||g" $CONF_NAME;
     # fi
 fi
+
+if [[ -d "${LOGDIR}" ]]; then
+    sed -i.bk 12' a\
+\    access_log PATH_TO_LOGDIR/DOMAIN.access.log;\
+\    error_log  PATH_TO_LOGDIR/DOMAIN.error.log;\
+    ' $CONF_NAME;
+fi
+
+
 
 if [[ "$4" = "dev" ]]; then
     sed -i.bk "s|www.DOMAIN ||g" $CONF_NAME;
@@ -142,6 +163,7 @@ fi
 sed -i.bk "s/DOMAIN/${DOMAIN}/g" $CONF_NAME;
 sed -i.bk "s/UPSTREAMNAME/${UPSTREAMNAME}/g" $CONF_NAME;
 sed -i.bk "s|PATH_TO_WEBDIR|$WEBDIR|g" $CONF_NAME;
+sed -i.bk "s|PATH_TO_LOGDIR|$LOGDIR|g" $CONF_NAME;
 
 rm "$CONF_NAME.bk"
 
