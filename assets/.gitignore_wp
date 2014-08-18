@@ -1,0 +1,30 @@
+# Config and log-files
+.DS_Store
+.htaccess
+nginx.conf
+local-config.php
+*.log
+
+# Uploads
+content/uploads/
+content/blogs.dir/
+content/upgrade/
+content/ewww/
+test/
+
+# Vendor, Plugins and WordPress
+vendor/
+content/plugins/
+content/themes/wp-template
+wordpress/
+
+# Caching
+content/advanced-cache.php
+content/wp-cache-config.php
+content/w3tc-config/
+content/plugins/w3tc-wp-loader.php
+content/cache/
+
+# Sitemap files
+sitemap.xml
+sitemap.xml.gz
