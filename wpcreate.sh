@@ -45,7 +45,7 @@ else
 	git commit -m "Initial commit."
 
 	# Add .gitignore
-	cp "$SCRIPT_DIR/assets/.gitignore" .
+	cp "$SCRIPT_DIR/assets/.gitignore_wp" .gitignore
 	git add .gitignore
 	git commit -m "Add .gitignore."
 
