@@ -118,14 +118,18 @@ else
 
 fi
 
-# Add local-config.php
-cp "$SCRIPT_DIR/assets/local-config.php" .
+if [ ! -f "local-config.php" ]; then
 
-# Edit local-config.php
-sed -i '' "s/define('MY_HOSTNAME', 'your-site.dev' );/define('MY_HOSTNAME', '${2}' );/" local-config.php;
+	# Add local-config.php
+	cp "$SCRIPT_DIR/assets/local-config.php" .
 
-if [ -n "$3" ]; then
-	sed -i '' "s/define('DB_NAME', 'database_name_here');/define('DB_NAME', '${3}');/" local-config.php;
-else
-	sed -i '' "s/define('DB_NAME', 'database_name_here');/define('DB_NAME', '${2}');/" local-config.php;
+	# Edit local-config.php
+	sed -i '' "s/define('MY_HOSTNAME', 'your-site.dev' );/define('MY_HOSTNAME', '${2}' );/" local-config.php;
+
+	if [ -n "$3" ]; then
+		sed -i '' "s/define('DB_NAME', 'database_name_here');/define('DB_NAME', '${3}');/" local-config.php;
+	else
+		sed -i '' "s/define('DB_NAME', 'database_name_here');/define('DB_NAME', '${2}');/" local-config.php;
+	fi
+
 fi
