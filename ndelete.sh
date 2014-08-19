@@ -80,6 +80,11 @@ if [[ ! -z $1 ]]; then
 	    sudo $SCRIPT_DIR/nginx reload
 	fi
 
+	if grep -q "$DOMAIN" "/etc/hosts"; then
+		echo -e "\033[0;36mRemove $DOMAIN from /etc/hosts\033[0m";
+		sudo sed -i '' "/${DOMAIN}/d" /etc/hosts;
+	fi
+
 else
 	echo "Usage: ndelete example.com";
 
