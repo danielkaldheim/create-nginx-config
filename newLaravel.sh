@@ -51,6 +51,7 @@ else
 	echo '*.log' >> .gitignore
 	echo '/logs/' >> .gitignore
 	echo 'app/config/local/' >> .gitignore
+	echo 'app/storage/' >> .gitignore
 
 	mv -v public/ public_html
 
@@ -97,6 +98,11 @@ EOL
 	git add .
 	git commit -m "Initial commit."
 
+	echo -e "Adding more composer stuff"
+	composer config repositories.crudus composer http://packages.crudus.no
+	composer require codesleeve/asset-pipeline:dev-master crudus/cms:dev-master
+
+	git commit -am "Added crudus/cms to project"
 fi
 
 if [ -f app/config/local/app.php ]; then
