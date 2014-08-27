@@ -88,10 +88,6 @@ EOL
 	rm -f app/config/app.php.bk
 
 
-	echo -e "Working on bootstrap/start.php...";
-	sed -i.bk -E "s/'local' => array((.*)[^\)])/'local' => array('${HOSTNAME}', '${2}', '${3}')/g" bootstrap/start.php;
-	rm -f bootstrap/start.php.bk
-
 	# git init
 	git init
 	git add .
@@ -121,7 +117,6 @@ if [ ! -d app/config/local ]; then
 	mkdir -v -m 775 app/config/local
 fi
 
-
 cp app/config/app.php app/config/local/app.php
 
 sed -i.bk "s|'debug' => false|'debug' => true|g" app/config/local/app.php;
@@ -142,6 +137,11 @@ sed -i.bk -E "s/'username'([[:space:]]*)=> '(.*)'/'username'\1=> '${NCREATE_MYSQ
 sed -i.bk -E "s/'password'([[:space:]]*)=> '(.*)'/'password'\1=> '${NCREATE_MYSQL_PASSWORD}'/g" app/config/local/database.php;
 sed -i.bk -E "s/'prefix'([[:space:]]*)=> '(.*)'/'prefix)'\1=> '${SHORT_SLUG}_'/g" app/config/local/database.php;
 rm -f app/config/local/database.php.bk
+
+
+echo -e "Working on bootstrap/start.php...";
+sed -i.bk -E "s/'local' => array((.*)[^\)])/'local' => array('${HOSTNAME}', '${2}', '${3}')/g" bootstrap/start.php;
+rm -f bootstrap/start.php.bk
 
 # fix storage
 if [ ! -d app/storage ]; then
