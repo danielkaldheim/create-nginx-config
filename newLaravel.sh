@@ -15,17 +15,12 @@ if [ ! -d "${2}" ]; then
 	mkdir -v -m 775 "${2}"
 fi
 
-composer create-project laravel/laravel "${2}" --prefer-dist
-
-# Enter project dir
-cd "${2}"
-
-mkdir -v -m 775 logs
-	sudo chown -v _www:$DEFAULT_ADMIN_GROUP logs
 
 if [ ! -z "$4" ]; then
 
-	$NCREATE_SCRIPT_PATH/gitPublish.sh "${1}/${2}" $4
+	$NCREATE_SCRIPT_PATH/gitPublish.sh "${1}" $4 $2
+
+	cd "${2}"
 
 	if [ -d public ]; then
 		mv -v public/ public_html
@@ -47,6 +42,10 @@ EOL
 	fi
 
 else
+	# Enter project dir
+	cd "${2}"
+
+	composer create-project laravel/laravel "${2}" --prefer-dist
 
 	echo '*.log' >> .gitignore
 	echo '/logs/' >> .gitignore
@@ -90,7 +89,7 @@ EOL
 
 
 	echo -e "Working on bootstrap/start.php...";
-	sed -i.bk "s/'local' => array('homestead')/'local' => array('${HOSTNAME}', '${2}', '${3}')/g" bootstrap/start.php;
+	sed -i.bk -E "s/'local' => array((.*)[^\)])/'local' => array('${HOSTNAME}', '${2}', '${3}')/g" bootstrap/start.php;
 	rm -f bootstrap/start.php.bk
 
 	# git init
@@ -112,9 +111,16 @@ EOL
 	git commit -am "Added crudus/cms to project"
 fi
 
+# Remove old local configs
 if [ -f app/config/local/app.php ]; then
 	rm -f app/config/local/app.php
 fi
+
+
+if [ ! -d app/config/local ]; then
+	mkdir -v -m 775 app/config/local
+fi
+
 
 cp app/config/app.php app/config/local/app.php
 
@@ -128,10 +134,13 @@ echo ');' >> app/config/local/app.php;
 rm -f app/config/local/app.php.bk
 
 echo "Working on app/config/local/database.php...";
-sed -i.bk -E "s/'database'([[:space:]]*)=> 'homestead'/'database'\1=> '${3}'/g" app/config/local/database.php;
-sed -i.bk -E "s/'username'([[:space:]]*)=> 'homestead'/'username'\1=> '${NCREATE_MYSQL_USER}'/g" app/config/local/database.php;
-sed -i.bk -E "s/'password'([[:space:]]*)=> 'secret'/'password'\1=> '${NCREATE_MYSQL_PASSWORD}'/g" app/config/local/database.php;
-sed -i.bk -E "s/'prefix'([[:space:]]*)=> ''/'prefix'\1=> '${SHORT_SLUG}_'/g" app/config/local/database.php;
+if [ ! -f app/config/local/database.php ]; then
+	cp app/config/database.php app/config/local/database.php
+fi
+sed -i.bk -E "s/'database'([[:space:]]*)=> '(.*)'/'database'\1=> '${3}'/g" app/config/local/database.php;
+sed -i.bk -E "s/'username'([[:space:]]*)=> '(.*)'/'username'\1=> '${NCREATE_MYSQL_USER}'/g" app/config/local/database.php;
+sed -i.bk -E "s/'password'([[:space:]]*)=> '(.*)'/'password'\1=> '${NCREATE_MYSQL_PASSWORD}'/g" app/config/local/database.php;
+sed -i.bk -E "s/'prefix'([[:space:]]*)=> '(.*)'/'prefix)'\1=> '${SHORT_SLUG}_'/g" app/config/local/database.php;
 rm -f app/config/local/database.php.bk
 
 # fix storage
@@ -139,5 +148,10 @@ if [ ! -d app/storage ]; then
 	mkdir -v app/storage
 fi
 
-sudo chown -v -R _www:$DEFAULT_ADMIN_GROUP app/storage/
-sudo chmod -v -R 775 app/storage/
+sudo chown -v -R _www:$DEFAULT_ADMIN_GROUP app/storage
+sudo chmod -v -R 775 app/storage
+
+mkdir -v -m 775 logs
+sudo chown -v _www:$DEFAULT_ADMIN_GROUP logs
+
+php artisan dump-autoload

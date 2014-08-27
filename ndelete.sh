@@ -20,6 +20,31 @@ if [[ ! -z $1 ]]; then
 	fi
 
 	if [ -d "$GLOBAL_WWW_PATH/$DOMAIN" ]; then
+
+		cd "$GLOBAL_WWW_PATH/$DOMAIN"
+
+		if [[ "$(git status --porcelain 2>/dev/null)" = *\?\?* ]]; then
+			while true
+			do
+				echo -e "\033[0;32mProject has uncomited files, still want to remove project? [Y/N]?\033[0m"
+				read yn
+				case $yn
+					in
+						[yY])
+							break
+							;;
+						[nN])
+							exit 0
+							break
+							;;
+						*)
+							echo "Please enter Y or N"
+				esac
+			done
+		fi
+
+		cd ..
+
 		echo -e "Removing ${GLOBAL_WWW_PATH}/${DOMAIN} ...";
 		rm -rf "${GLOBAL_WWW_PATH}/${DOMAIN}"
 	fi

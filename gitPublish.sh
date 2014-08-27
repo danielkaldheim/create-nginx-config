@@ -22,21 +22,30 @@ if [[ $? -eq 0 ]]; then
 	fi
 
 	# Update bower
-	bower_files="$(find . -name 'bower.json')"
+	prev='';
+	vendorPath="bower_components";
+	find . -type f -iname "bower.json" -print0 | while IFS= read -r -d $'\0' bower_file_path; do
+		bowerDir="${bower_file_path//bower.json/}";
 
-	if [ "$bower_files" != "" ]; then
+		if [[ "${bowerDir}" != "${prev}${vendorPath}"* ]]; then
+			echo -e "\033[0;36mUpdating Bower in \033[1;36m${bowerDir}\033[0m"
 
-		IFS=' ' read -a bower_files_array <<< "$bower_files"
-
-		for bower_file in "${bower_files_array[@]}"
-		do
-			echo -e "\033[0;36mUpdating Bower in \033[1;36m${bower_file//bower.json/}\033[0m"
-			cd "${bower_file//bower.json/}"
+			cd $bowerDir;
 			bower update
 			cd "${1}/${3}"
-		done
 
-	fi
+			# Filter out bad dirs
+			prev=$bowerDir;
+			if [[ -f "${bowerDir}.bowerrc" ]]; then
+				vendorPath=`cat "${bowerDir}.bowerrc" | python -c "import json,sys;obj=json.load(sys.stdin);print str(obj['directory'])"`
+				if [[ "${vendorPath}" == *Traceback* ]]; then
+					vendorPath="bower_components";
+				fi
+			fi
+		fi
+
+	done
+
 else
 	echo -e "Something went wrong";
 fi
