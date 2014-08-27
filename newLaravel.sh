@@ -99,8 +99,15 @@ EOL
 	git commit -m "Initial commit."
 
 	echo -e "Adding more composer stuff"
+
+	## CRUDUS CMS
 	composer config repositories.crudus composer http://packages.crudus.no
 	composer require codesleeve/asset-pipeline:dev-master crudus/cms:dev-master
+
+	rm -v app/models/User.php
+
+	php artisan dump-autoload
+	#php artisan migrate --package="Crudus/Cms"
 
 	git commit -am "Added crudus/cms to project"
 fi
