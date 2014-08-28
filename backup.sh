@@ -20,8 +20,9 @@ if [ ! -z $BACKUPPATH ]; then
 
 		mysql --user=$NCREATE_MYSQL_USER --password=$NCREATE_MYSQL_PASSWORD -e 'show databases' | while read dbname; do mysqldump -uroot --password=$NCREATE_MYSQL_PASSWORD --complete-insert $dbname > "${BACKUPPATH}/mysql/${dbname}.sql"; done
 
-		find "${BACKUPPATH}/mysql" -name "*.sql" | tar -cjf "/tmp/${TARFILE}" -T -
-		cd "${BACKUPPATH}/mysql" && rm -f *.sql
+		cd "${BACKUPPATH}/mysql"
+		find ./ -name "*.sql" | tar -cjf "/tmp/${TARFILE}" -T -
+		rm -f *.sql
 		mv "/tmp/${TARFILE}" "${BACKUPPATH}/"
 	fi
 
