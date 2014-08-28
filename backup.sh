@@ -8,6 +8,10 @@ fi
 
 # backup mysql
 
+if [ ! -d "${BACKUPPATH}/mysql" ]; then
+	mkdir -v -m 755 "${BACKUPPATH}/mysql"
+fi
+
 #TARFILE="mysql_"$(date +'%m-%d-%Y')".tar.bz2"
 TARFILE="mysql.tar.bz2"
 
