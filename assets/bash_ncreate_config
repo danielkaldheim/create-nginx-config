@@ -6,6 +6,8 @@ export NCREATE_MYSQL_PASSWORD="root"
 export OPEN_SUBLIME_TEXT="TRUE"
 export GLOBAL_WWW_PATH="/var/www"
 
+export BACKUPPATH="/var/backup"
+
 export NCREATE_SCRIPT_PATH="PATH/TO/create_nginx_osx"
 
 export NGINX_VHOST_PATH="/etc/nginx/sites-enabled"
