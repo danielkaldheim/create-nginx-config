@@ -20,7 +20,7 @@ if [ ! -z $BACKUPPATH ]; then
 		mysql --user=$NCREATE_MYSQL_USER --password=$NCREATE_MYSQL_PASSWORD -e 'show databases' | while read dbname; do mysqldump -uroot --password=$NCREATE_MYSQL_PASSWORD --complete-insert $dbname > "${BACKUPPATH}/mysql/${dbname}.sql"; done
 
 		cd "${BACKUPPATH}/mysql"
-		find . -name "*.sql" | tar -cvjf "/tmp/${TARFILE}" -T -
+		find . -name "*.sql" | tar -cjf "/tmp/${TARFILE}" -T -
 		rm -f *.sql
 		mv "/tmp/${TARFILE}" "${BACKUPPATH}/"
 	fi
@@ -30,7 +30,7 @@ if [ ! -z $BACKUPPATH ]; then
 		TARFILE="nginx.tar.bz2"
 
 		cd "${NGINX_VHOST_PATH}"
-		find . -name "*.conf" | tar -cvjf "/tmp/${TARFILE}" -T -
+		find . -name "*.conf" | tar -cjf "/tmp/${TARFILE}" -T -
 		mv "/tmp/${TARFILE}" "${BACKUPPATH}/"
 	fi
 
@@ -39,7 +39,7 @@ if [ ! -z $BACKUPPATH ]; then
 		TARFILE="php-fpm.tar.bz2"
 
 		cd "${PHP_FPM_POOL_PATH}"
-		find . -name "*.conf" | tar -cvjf "/tmp/${TARFILE}" -T -
+		find . -name "*.conf" | tar -cjf "/tmp/${TARFILE}" -T -
 		mv "/tmp/${TARFILE}" "${BACKUPPATH}/"
 	fi
 
