@@ -15,7 +15,7 @@ if [[ ! -z $1 ]]; then
 	if [[ "$DOMAIN" =~ $PATTERN ]]; then
 	    DOMAIN=`echo $DOMAIN | tr '[A-Z]' '[a-z]'`
 	else
-	    echo "\033[0;31mInvalid domain name\033[0m"
+	    echo -e "\033[0;31mInvalid domain name\033[0m"
 	    exit 1
 	fi
 
