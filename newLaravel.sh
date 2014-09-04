@@ -8,14 +8,12 @@ SHORT_SLUG=${2:0:2};
 
 # Goto hosts dir
 cd "${1}"
-pwd
 
 # Check if project dir exists
 # If not, create it
 if [ ! -d "${2}" ]; then
 	mkdir -v -m 775 "${2}"
 fi
-
 
 if [ ! -z "$4" ]; then
 
@@ -97,7 +95,7 @@ EOL
 	git commit -m "Initial commit."
 
 	echo -e "Adding more composer stuff"
-	pwd
+
 	## CRUDUS CMS
 	composer config repositories.crudus composer http://packages.crudus.no
 	composer require codesleeve/asset-pipeline:dev-master crudus/cms:dev-master
