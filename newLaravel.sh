@@ -8,6 +8,7 @@ SHORT_SLUG=${2:0:2};
 
 # Goto hosts dir
 cd "${1}"
+pwd
 
 # Check if project dir exists
 # If not, create it
@@ -21,6 +22,7 @@ if [ ! -z "$4" ]; then
 	$NCREATE_SCRIPT_PATH/gitPublish.sh "${1}" $4 $2
 
 	cd "${2}"
+	pwd
 
 	if [ -d public ]; then
 		mv -v public/ public_html
@@ -42,10 +44,11 @@ EOL
 	fi
 
 else
+
 	# Enter project dir
 	cd "${2}"
 
-	composer create-project laravel/laravel "${2}" --prefer-dist
+	composer create-project laravel/laravel . --prefer-dist
 
 	echo '*.log' >> .gitignore
 	echo '/logs/' >> .gitignore
@@ -94,7 +97,7 @@ EOL
 	git commit -m "Initial commit."
 
 	echo -e "Adding more composer stuff"
-
+	pwd
 	## CRUDUS CMS
 	composer config repositories.crudus composer http://packages.crudus.no
 	composer require codesleeve/asset-pipeline:dev-master crudus/cms:dev-master
