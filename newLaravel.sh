@@ -99,6 +99,7 @@ EOL
 	## CRUDUS CMS
 	composer config repositories.crudus composer http://packages.crudus.no
 	composer require codesleeve/asset-pipeline:dev-master crudus/cms:dev-master
+	composer require way/generators:2.* --dev
 
 	rm -v app/models/User.php
 

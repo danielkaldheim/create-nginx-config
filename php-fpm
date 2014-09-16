@@ -19,7 +19,7 @@
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DESC="PHP-FPM Daemon"
 NAME=php-fpm
-PREFIX=/usr/local/
+PREFIX=/usr/local
 DAEMON=$PREFIX/sbin/$NAME
 CONF=/usr/local/etc/php/current/$NAME.conf
 PID=/var/run/$NAME.pid
