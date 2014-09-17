@@ -83,7 +83,7 @@ else
 	git commit -m "Adding default wp-config.php file"
 
 	# Edit wp-config.php
-	sed -i '' '74,82d' wp-config.php
+	sed -i '' '64,72d' wp-config.php
 	sed -i '' '17,28d' wp-config.php
 	sed -i '' 16' a\
 	require_once(dirname(__FILE__) . "/" . "vendor/autoload.php");\
@@ -101,11 +101,11 @@ else
 	printf '%s\n' H 35i "" . wq | ed -s wp-config.php;
 	printf '%s\n' H 36i "$SALT" . wq | ed -s wp-config.php;
 
-	sed -i '' 69' a\
+	sed -i '' 59' a\
 	if ( !defined("WP_DOCUMENT_ROOT") )\
-		define("WP_DOCUMENT_ROOT", dirname(__FILE__) . "/" );\
+	\	define("WP_DOCUMENT_ROOT", dirname(__FILE__) . "/" );\
 	if ( !defined( "WP_LANG_DIR" ) )\
-		define( "WP_LANG_DIR", ABSPATH . "/wp-content" . "/languages" );\
+	\	define( "WP_LANG_DIR", ABSPATH . "/wp-content" . "/languages" );\
 	' wp-config.php;
 
 	git commit -am "Update wp-config.php"

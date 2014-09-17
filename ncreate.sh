@@ -2,6 +2,29 @@
 
 source ~/.bash_ncreate_config
 
+function self_check() {
+
+	# Save current dir
+	CURRENTDIR=$(pwd)
+
+	cd $NCREATE_SCRIPT_PATH;
+
+	# Fetch changes, git stores them in FETCH_HEAD
+	git fetch --quiet
+
+	# check for remote changes in origin repository
+	newUpdatesAvailable=`git diff HEAD FETCH_HEAD`
+	if [ "$newUpdatesAvailable" != "" ]
+		then
+		echo -e "\e[0;91mNew update available! Please update script: \e[1;91m${NCREATE_SCRIPT_PATH}\033[0m";
+	fi
+
+	cd $CURRENTDIR;
+
+}
+
+self_check
+
 DOMAIN="$1.dev";
 
 # check the domain is valid!
