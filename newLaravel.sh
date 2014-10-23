@@ -127,6 +127,14 @@ sed -i.bk "s|'url' => 'http://localhost'|'url' => 'http://${2}'|g" app/config/lo
 sed -i.bk "57,\$d" app/config/local/app.php;
 
 #sed -i.bk '57i\'$'\n'');'$'\n' app/config/local/app.php;
+
+cat >>app/config/local/app.php <<EOL
+
+	'providers' => array(
+		'Way\Generators\GeneratorsServiceProvider'
+	),
+EOL
+
 echo ');' >> app/config/local/app.php;
 rm -f app/config/local/app.php.bk
 
