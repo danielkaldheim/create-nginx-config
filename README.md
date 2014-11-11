@@ -7,6 +7,7 @@
 
 # Usage
 
+
 ## ncreate
 ncreate appends *.dev* to the domainname.
 Also adds it into /etc/hosts/
@@ -50,22 +51,30 @@ ncreate mywebsite laravel https://github.com/user/mywebsite.git
 
 ## ndeploy
 
-### Deploy mywebsite.com to user domain directory (ex. `/home/username/domains/mywebsite.com/public_html/`)
+### Deploy mywebsite.com to user domain directory
+Example: `/home/username/domains/mywebsite.com/public_html/`
+
 ```shell
 ndeploy username mywebsite.com
 ```
 
-### Deploy mywebsite.com to user domain directory (ex. `/home/username/domains/mywebsite.com/public_html/`) with git
+### Deploy mywebsite.com to user domain directory with git
+Example: `/home/username/domains/mywebsite.com/public_html/`
+
 ```shell
 ndeploy username mywebsite.com https://github.com/user/mywebsite.git
 ```
 
-### Deploy mywebsite.com to global directory (ex. `/var/www/mywebsite.com/public_html/`)
+### Deploy mywebsite.com to global directory
+Example: `/var/www/mywebsite.com/public_html/`
+
 ```shell
 ndeploy global mywebsite.com
 ```
 
-### Deploy mywebsite.com to global directory (ex. `/var/www/mywebsite.com/public_html/`) with git
+### Deploy mywebsite.com to global directory with git
+Example: `/var/www/mywebsite.com/public_html/`
+
 ```shell
 ndeploy global mywebsite.com https://github.com/user/mywebsite.git
 ```
