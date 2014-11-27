@@ -64,10 +64,11 @@ else
 
 	# Check composer version
 	composerversion=$(composer --version)
+	composerPath=`which composer`
 
-	if [[ "$composerversion" =~ "/usr/bin/composer self-update" ]]
+	if [[ "$composerversion" =~ "$composerPath self-update" ]]
 	then
-		sudo /usr/bin/composer self-update
+		sudo $composerPath self-update
 	fi
 
 	# Install dependencies
