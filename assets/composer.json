@@ -14,8 +14,8 @@
   "require": {
     "php": ">=5.3.0",
     "composer/installers": "~1.0",
-    "fancyguy/webroot-installer": "1.0.0",
-    "wordpress/wordpress_no": ">=3.8.2",
+    "fancyguy/webroot-installer": "1.1.0",
+    "wordpress/wordpress": ">=4.1",
     "wpackagist-plugin/wordpress-seo": ">=1.4.24",
     "wpackagist-plugin/ewww-image-optimizer": ">=1.8.2",
     "wpackagist-plugin/w3-total-cache": ">=0.9.3",
@@ -31,7 +31,7 @@
       ]
     },
     "webroot-dir": "wordpress",
-    "webroot-package": "wordpress/wordpress_no"
+    "webroot-package": "wordpress/wordpress"
   },
   "repositories": [
     {
