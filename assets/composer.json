@@ -1,6 +1,7 @@
 {
   "name": "idriftweb/project-name",
   "type": "project",
+  "description": "",
   "authors": [
     {
       "name": "Magnus Hauge Bakke",
