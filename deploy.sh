@@ -99,7 +99,7 @@ if [ $3 ]; then
 		ln -v -s $POST_RECEIVE_SCRIPT_PATH "${HOOKS_PATH}/post-receive"
 	else
 		echo -e "\033[0;36mDownloading post receive script\033[0m"
-		curl -k -o "post-receive" "https://git.crudus.no/server/post-recive/raw/master/post-receive"
+		curl -k -o "post-receive" "https://git.crudus.no/server/post-receive/raw/master/post-receive"
 		chmod -v +x post-receive
 	fi
 

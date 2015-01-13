@@ -119,6 +119,14 @@ else
 
 fi
 
+if [ $POST_RECEIVE_SCRIPT_PATH != "" ]; then
+	POST_RECEIVE_SCRIPT_PATH_ROOT=`dirname ${POST_RECEIVE_SCRIPT_PATH}`
+	GIT_TOPLEVEL_PATH="$(git rev-parse --show-toplevel)"
+	if [ -f "${POST_RECEIVE_SCRIPT_PATH_ROOT}/post-merge" ]; then
+		ln -s "${POST_RECEIVE_SCRIPT_PATH_ROOT}/post-merge" "${GIT_TOPLEVEL_PATH}/.git/hooks/post-merge"
+	fi
+fi
+
 if [ ! -f "local-config.php" ]; then
 
 	# Add local-config.php
